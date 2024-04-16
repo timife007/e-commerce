@@ -1,15 +1,16 @@
 package com.timife.models.entities;
 
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
+@Table(name = "refresh_token")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +18,8 @@ import java.time.Instant;
 public class RefreshToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    @Column(name = "refresh_id")
     private int id;
     private String token;
 

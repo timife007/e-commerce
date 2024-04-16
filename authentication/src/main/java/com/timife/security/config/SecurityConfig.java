@@ -1,6 +1,5 @@
 package com.timife.security.config;
 
-import com.timife.models.Role;
 import com.timife.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -11,11 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.DefaultSecurityFilterChain;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import javax.servlet.http.HttpServletRequest;
 
 @Configuration
 @RequiredArgsConstructor
@@ -30,13 +26,14 @@ public class SecurityConfig {
     @Bean
     public DefaultSecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
         security
-                .csrf().disable()
-                .authorizeHttpRequests((requests) ->{
-                    requests.antMatchers("/auth/**").permitAll()
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests((requests) -> {
+                    requests.requestMatchers("/auth/**").permitAll()
                             .anyRequest().authenticated();
                 })
-                .sessionManagement((session) ->{
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);})
+                .sessionManagement((session) -> {
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                })
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

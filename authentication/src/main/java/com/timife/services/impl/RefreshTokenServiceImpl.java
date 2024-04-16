@@ -1,16 +1,19 @@
 package com.timife.services.impl;
 
+import com.timife.models.Role;
 import com.timife.models.entities.RefreshToken;
+import com.timife.models.entities.User;
 import com.timife.repositories.RefreshTokenRepository;
 import com.timife.repositories.UserRepository;
 import com.timife.services.RefreshTokenService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @Service
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
@@ -27,7 +30,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 .token(UUID.randomUUID().toString())
                 .expiryDate(Instant.now().plusMillis(600000)) // set expiry of refresh token to 10 minutes - you can configure it application.properties file
                 .build();
-
         return refreshTokenRepository.save(refreshToken);
     }
 
@@ -44,5 +46,4 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         }
         return token;
     }
-
 }

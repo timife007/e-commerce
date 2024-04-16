@@ -9,12 +9,16 @@ import com.timife.models.requests.UserRequestDto;
 import com.timife.models.responses.AuthResponse;
 import com.timife.repositories.UserRepository;
 import com.timife.security.JwtService;
+import com.timife.services.AuthenticationService;
 import com.timife.services.RefreshTokenService;
+import com.timife.services.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,52 +28,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
-    @Autowired
-    RefreshTokenService refreshTokenService;
-    @Autowired
-    AuthenticationManager authenticationManager;
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
+    private final UserService detailsService;
+    private final JwtService jwtService;
+    private final AuthenticationService authService;
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> register(@RequestBody UserRequestDto request) {
-        User user = User.builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
-                .build();
-        userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
-        return ResponseEntity.ok(AuthResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken.getToken())
-                .build());
+        return ResponseEntity.ok(authService.register(request));
     }
 
     @PostMapping("/login")
-    public AuthResponse AuthenticateAndGetToken(@RequestBody AuthRequestDto authRequestDTO) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getEmail(), authRequestDTO.getPassword()));
-        if (authentication.isAuthenticated()) {
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.getEmail());
-            User user = userRepository.findByEmail(authRequestDTO.getEmail()).orElseThrow();
-            return AuthResponse.builder()
-                    .accessToken(jwtService.generateToken(user))
-                    .refreshToken(refreshToken.getToken())
-                    .build();
-
-        } else {
-            throw new UsernameNotFoundException("invalid user request..!!");
-        }
+    public ResponseEntity<AuthResponse> AuthenticateAndGetToken(@RequestBody AuthRequestDto authRequestDTO) {
+        return ResponseEntity.ok(authService.authenticate(authRequestDTO));
     }
 
 
@@ -80,7 +53,8 @@ public class AuthController {
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(userInfo -> {
-                    String accessToken = jwtService.generateToken(userInfo);
+                    var userDetails = detailsService.getUser(userInfo.getEmail());
+                    String accessToken = jwtService.generateToken(userDetails);
                     return AuthResponse.builder()
                             .accessToken(accessToken)
                             .refreshToken(refreshTokenRequestDTO.getRefreshToken()).build();

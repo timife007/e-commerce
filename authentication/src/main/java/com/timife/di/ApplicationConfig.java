@@ -17,27 +17,28 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
+    private final UserRepository userRepository;
 
     //Just as always, using dependency injection, declare the UserDetailsService as a bean
     //and state the declaration.
+
     @Bean
-    public UserDetailsService userDetailsService(
-            UserRepository userRepository
-    ) {
+    public UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+
     @Bean
-    private AuthenticationProvider authenticationProvider(UserRepository userRepository) {
+    public AuthenticationProvider authenticationProvider(UserRepository userRepository) {
         var authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService(userRepository));
+        authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
 
     @Bean
-    private PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
