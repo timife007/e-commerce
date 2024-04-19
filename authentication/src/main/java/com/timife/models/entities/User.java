@@ -33,7 +33,8 @@ public class User implements UserDetails {
     private String password;
 
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "refresh_id")
     private RefreshToken refreshToken;
 
     @Override
@@ -70,4 +71,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

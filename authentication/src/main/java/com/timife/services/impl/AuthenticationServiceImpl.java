@@ -5,6 +5,7 @@ import com.timife.models.entities.User;
 import com.timife.models.requests.AuthRequestDto;
 import com.timife.models.requests.UserRequestDto;
 import com.timife.models.responses.AuthResponse;
+import com.timife.models.responses.RegisterResponse;
 import com.timife.repositories.RefreshTokenRepository;
 import com.timife.repositories.UserRepository;
 import com.timife.security.JwtService;
@@ -27,7 +28,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final RefreshTokenService tokenService;
 
     @Override
-    public AuthResponse register(UserRequestDto requestDto) {
+    public RegisterResponse register(UserRequestDto requestDto) {
         User user = User.builder()
                 .firstName(requestDto.getFirstName())
                 .lastName(requestDto.getLastName())
@@ -39,9 +40,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new UsernameNotFoundException("User already registered");
         }
         userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = tokenService.createRefreshToken(user.getEmail());
-        return AuthResponse.builder().accessToken(jwtToken).refreshToken(refreshToken.getToken()).build();
+        return RegisterResponse.builder().message("Successfully created").build();
     }
 
     @Override
@@ -52,7 +51,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         var user = userRepository.findByEmail(authRequestDto.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
-        var refreshToken = tokenService.createRefreshToken(user.getEmail());
+        var refreshToken = tokenService.createRefreshToken(user);
         return AuthResponse.builder().accessToken(jwtToken).refreshToken(refreshToken.getToken()).build();
     }
 }

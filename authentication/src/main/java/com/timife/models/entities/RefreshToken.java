@@ -18,14 +18,13 @@ import java.time.Instant;
 public class RefreshToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "refresh_id")
     private int id;
     private String token;
 
     private Instant expiryDate;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "refreshToken")
     private User user;
 }

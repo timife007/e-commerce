@@ -24,9 +24,10 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     UserRepository userRepository;
 
     @Override
-    public RefreshToken createRefreshToken(String username) {
+    public RefreshToken createRefreshToken(User user) {
+
         RefreshToken refreshToken = RefreshToken.builder()
-                .user(userRepository.findByEmail(username).orElseThrow())
+                .user(user)
                 .token(UUID.randomUUID().toString())
                 .expiryDate(Instant.now().plusMillis(600000)) // set expiry of refresh token to 10 minutes - you can configure it application.properties file
                 .build();
