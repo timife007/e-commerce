@@ -38,11 +38,27 @@ public class AuthController {
             return errorEntity("Enter a valid email address", HttpStatus.UNAUTHORIZED);
         }
         try {
-            return ResponseEntity.ok(authService.register(request));
+            return ResponseEntity.ok(authService.register(request.toUser()));
         } catch (Exception e) {
             return errorEntity(e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @PostMapping("vendor/signup")
+    public ResponseEntity<?> vendorRegister(@RequestBody UserRequestDto request) {
+        if (request.getPassword().length() < 6) {
+            return errorEntity("Password should not be less than 6 characters", HttpStatus.UNAUTHORIZED);
+        } else if (!request.getEmail().endsWith("@gmail.com")) {
+            return errorEntity("Enter a valid email address", HttpStatus.UNAUTHORIZED);
+        }
+        try {
+            return ResponseEntity.ok(authService.register(request.toVendorUser()));
+        } catch (Exception e) {
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequestDto authRequestDTO) {

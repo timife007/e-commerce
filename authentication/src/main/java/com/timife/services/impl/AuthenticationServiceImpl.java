@@ -31,13 +31,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final RefreshTokenService tokenService;
 
     @Override
-    public RegisterResponse register(UserRequestDto requestDto) {
+    public RegisterResponse register(User userDto) {
         User user = User.builder()
-                .firstName(requestDto.getFirstName())
-                .lastName(requestDto.getLastName())
-                .email(requestDto.getEmail())
-                .password(passwordEncoder.encode(requestDto.getPassword()))
-                .role(Role.USER)
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
+                .email(userDto.getEmail())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .role(userDto.getRole())
                 .build();
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new UsernameNotFoundException("User already registered");
@@ -54,7 +54,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             var jwtToken = jwtService.generateToken(user);
             var refreshToken = tokenService.createRefreshToken(user);
             return AuthResponse.builder().accessToken(jwtToken).refreshToken(refreshToken.getToken()).build();
-        }else{
+        } else {
             throw new UsernameNotFoundException("invalid user request..!!");
         }
     }
