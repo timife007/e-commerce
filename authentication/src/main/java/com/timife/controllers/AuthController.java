@@ -9,6 +9,7 @@ import com.timife.repositories.RefreshTokenRepository;
 import com.timife.services.AuthenticationService;
 import com.timife.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +27,6 @@ public class AuthController {
     private final UserService detailsService;
     private final RefreshTokenRepository repository;
     private final AuthenticationService authService;
-
-
-
-
 
     @PostMapping("/signup")
     public ResponseEntity<?> register(@RequestBody UserRequestDto request) {
@@ -57,8 +54,6 @@ public class AuthController {
         }
     }
 
-
-
     @PostMapping("/login")
     public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequestDto authRequestDTO) {
         ResponseEntity<?> validation = validatePasswordAndEmail(authRequestDTO.getEmail(), authRequestDTO.getPassword());
@@ -71,7 +66,6 @@ public class AuthController {
             return errorEntity(e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
-
 
     //Verify that the token exists, if expired, then use it to get the user data to generate a new access token.
     @PostMapping("/refreshToken")
@@ -89,7 +83,7 @@ public class AuthController {
     }
 
     @GetMapping("/users")
-    ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(detailsService.getAllUsers());
+    ResponseEntity<?> getAllUsers(Pageable pageable) {
+        return ResponseEntity.ok(detailsService.getAllUsers(pageable));
     }
 }

@@ -2,6 +2,8 @@ package com.timife.services;
 
 import com.timife.models.entities.User;
 import com.timife.repositories.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,7 +14,7 @@ import java.util.List;
 //@RequiredArgsConstructor
 public interface UserService {
 
-    public List<User> getAllUsers();
+    public Page<User> getAllUsers(Pageable pageable);
     public User getUser(String email);
 
 

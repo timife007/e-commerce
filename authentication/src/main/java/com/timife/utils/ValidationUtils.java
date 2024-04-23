@@ -10,10 +10,10 @@ public class ValidationUtils {
         ErrorResponse errorResponse = new ErrorResponse(errorMessage, status);
         return new ResponseEntity<>(errorResponse, status);
     }
-    public static ResponseEntity<?> validatePasswordAndEmail(String password, String email) {
+    public static ResponseEntity<?> validatePasswordAndEmail(String email, String password) {
         if (password.length() < 6) {
             return errorEntity("Password should not be less than 6 characters", HttpStatus.UNAUTHORIZED);
-        } else if (!email.endsWith("@gmail.com")) {
+        } else if (!email.endsWith("@gmail.com") && !email.endsWith("@yahoo.com")) {
             return errorEntity("Enter a valid email address", HttpStatus.UNAUTHORIZED);
         } else {
             return null; // Or any other appropriate response if validation passes
