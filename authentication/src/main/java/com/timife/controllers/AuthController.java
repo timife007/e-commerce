@@ -5,7 +5,6 @@ import com.timife.models.entities.User;
 import com.timife.models.requests.AuthRequestDto;
 import com.timife.models.requests.RefreshTokenRequestDto;
 import com.timife.models.requests.UserRequestDto;
-import com.timife.models.responses.ErrorResponse;
 import com.timife.repositories.RefreshTokenRepository;
 import com.timife.services.AuthenticationService;
 import com.timife.services.UserService;
@@ -16,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.timife.utils.ValidationUtils.errorEntity;
+import static com.timife.utils.ValidationUtils.validatePasswordAndEmail;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -25,17 +27,15 @@ public class AuthController {
     private final RefreshTokenRepository repository;
     private final AuthenticationService authService;
 
-    ResponseEntity<ErrorResponse> errorEntity(String errorMessage, HttpStatus status) {
-        ErrorResponse errorResponse = new ErrorResponse(errorMessage, status);
-        return new ResponseEntity<>(errorResponse, status);
-    }
+
+
+
 
     @PostMapping("/signup")
     public ResponseEntity<?> register(@RequestBody UserRequestDto request) {
-        if (request.getPassword().length() < 6) {
-            return errorEntity("Password should not be less than 6 characters", HttpStatus.UNAUTHORIZED);
-        } else if (!request.getEmail().endsWith("@gmail.com")) {
-            return errorEntity("Enter a valid email address", HttpStatus.UNAUTHORIZED);
+        ResponseEntity<?> validation = validatePasswordAndEmail(request.getEmail(), request.getPassword());
+        if(validation != null){
+            return validation;
         }
         try {
             return ResponseEntity.ok(authService.register(request.toUser()));
@@ -46,10 +46,9 @@ public class AuthController {
 
     @PostMapping("vendor/signup")
     public ResponseEntity<?> vendorRegister(@RequestBody UserRequestDto request) {
-        if (request.getPassword().length() < 6) {
-            return errorEntity("Password should not be less than 6 characters", HttpStatus.UNAUTHORIZED);
-        } else if (!request.getEmail().endsWith("@gmail.com")) {
-            return errorEntity("Enter a valid email address", HttpStatus.UNAUTHORIZED);
+        ResponseEntity<?> validation = validatePasswordAndEmail(request.getEmail(), request.getPassword());
+        if(validation != null){
+            return validation;
         }
         try {
             return ResponseEntity.ok(authService.register(request.toVendorUser()));
@@ -62,10 +61,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequestDto authRequestDTO) {
-        if (authRequestDTO.getPassword().length() < 6) {
-            return errorEntity("Password should not be less than 6 characters", HttpStatus.UNAUTHORIZED);
-        } else if (!authRequestDTO.getEmail().endsWith("@gmail.com")) {
-            return errorEntity("Enter a valid email address", HttpStatus.UNAUTHORIZED);
+        ResponseEntity<?> validation = validatePasswordAndEmail(authRequestDTO.getEmail(), authRequestDTO.getPassword());
+        if(validation != null){
+            return validation;
         }
         try {
             return ResponseEntity.ok(authService.authenticate(authRequestDTO));
