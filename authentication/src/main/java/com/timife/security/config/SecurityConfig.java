@@ -28,13 +28,15 @@ public class SecurityConfig {
         security
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> {
-                    requests.anyRequest().permitAll();
+                    requests.requestMatchers("/auth/**").permitAll()
+                            .anyRequest().authenticated();
                 })
                 .sessionManagement((session) -> {
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
         return security.build(); //an exception should be added to the configuration because it might throw an exception.
     }
 }

@@ -1,8 +1,10 @@
 package com.timife.services.impl;
 
 import com.timife.models.Role;
+import com.timife.models.entities.RefreshToken;
 import com.timife.models.entities.User;
 import com.timife.models.requests.AuthRequestDto;
+import com.timife.models.requests.RefreshTokenRequestDto;
 import com.timife.models.requests.UserRequestDto;
 import com.timife.models.responses.AuthResponse;
 import com.timife.models.responses.RegisterResponse;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
     private final AuthenticationManager authManager;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService tokenService;
@@ -54,5 +57,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }else{
             throw new UsernameNotFoundException("invalid user request..!!");
         }
+    }
+
+    @Override
+    public AuthResponse refreshToken(RefreshTokenRequestDto refreshTokenDto) {
+        return refreshTokenService.findByToken(refreshTokenDto.getRefreshToken())
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(userInfo -> {
+                    String accessToken = jwtService.generateToken(userInfo);
+                    return AuthResponse.builder()
+                            .accessToken(accessToken)
+                            .refreshToken(refreshTokenDto.getRefreshToken()).build();
+                }).orElseThrow(() -> new RuntimeException("Refresh Token is not in DB..!!"));
     }
 }
