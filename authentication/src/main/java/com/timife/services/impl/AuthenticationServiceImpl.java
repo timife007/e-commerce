@@ -46,12 +46,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthResponse authenticate(AuthRequestDto authRequestDto) {
         var authMan = authManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDto.getEmail(), authRequestDto.getPassword()));
-        if (!authMan.isAuthenticated()) {
+        if (authMan.isAuthenticated()) {
+            var user = userRepository.findByEmail(authRequestDto.getEmail()).orElseThrow();
+            var jwtToken = jwtService.generateToken(user);
+            var refreshToken = tokenService.createRefreshToken(user);
+            return AuthResponse.builder().accessToken(jwtToken).refreshToken(refreshToken.getToken()).build();
+        }else{
             throw new UsernameNotFoundException("invalid user request..!!");
         }
-        var user = userRepository.findByEmail(authRequestDto.getEmail()).orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = tokenService.createRefreshToken(user);
-        return AuthResponse.builder().accessToken(jwtToken).refreshToken(refreshToken.getToken()).build();
     }
 }

@@ -12,7 +12,6 @@ import java.util.List;
 public class AuthApplication {
     public static final Logger logger = LoggerFactory.getLogger(AuthApplication.class);
     public static void main(String[] args) {
-
         SpringApplication.run(AuthApplication.class, args);
     }
 }

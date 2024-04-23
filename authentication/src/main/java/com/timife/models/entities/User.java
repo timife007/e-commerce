@@ -33,10 +33,6 @@ public class User implements UserDetails {
     private String password;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "refresh_id")
-    private RefreshToken refreshToken;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

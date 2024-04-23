@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 //@RequiredArgsConstructor
-@Service
 public interface UserService {
 
     public List<User> getAllUsers();
