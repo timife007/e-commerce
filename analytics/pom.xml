@@ -9,7 +9,6 @@
 
     <artifactId>analytics</artifactId>
     <packaging>jar</packaging>
-
     <name>analytics</name>
     <url>http://maven.apache.org</url>
 

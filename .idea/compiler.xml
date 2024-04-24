@@ -2,21 +2,42 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="catalog" />
+        <module name="profiles" />
+        <module name="order-management" />
+        <module name="inventory" />
+        <module name="cart" />
         <module name="analytics" />
         <module name="notification" />
         <module name="search" />
         <module name="content-management" />
-        <module name="profiles" />
         <module name="payment" />
+        <module name="categories" />
         <module name="category" />
-        <module name="order-management" />
-        <module name="cart" />
         <module name="authentication" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="products" target="21" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="analytics" options="" />
+      <module name="authentication" options="" />
+      <module name="cart" options="" />
+      <module name="category" options="" />
+      <module name="content-management" options="" />
+      <module name="notification" options="" />
+      <module name="order-management" options="" />
+      <module name="payment" options="" />
+      <module name="profiles" options="" />
+      <module name="search" options="" />
+    </option>
   </component>
 </project>
