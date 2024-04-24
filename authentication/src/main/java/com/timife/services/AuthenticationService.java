@@ -10,7 +10,7 @@ import com.timife.models.responses.RegisterResponse;
 
 public interface AuthenticationService {
 
-    public RegisterResponse register(User requestDto);
+    RegisterResponse register(User requestDto);
 
 
     public AuthResponse authenticate(AuthRequestDto authRequestDto);

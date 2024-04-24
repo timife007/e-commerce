@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.timife</groupId>
-        <artifactId>e-commerce</artifactId>
+        <artifactId>products</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>category</artifactId>
+    <artifactId>inventory</artifactId>
     <packaging>jar</packaging>
 
-    <name>category</name>
+    <name>inventory</name>
     <url>http://maven.apache.org</url>
 
     <properties>
