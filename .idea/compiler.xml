@@ -18,11 +18,11 @@
         <module name="content-management" />
         <module name="payment" />
         <module name="categories" />
-        <module name="category" />
         <module name="authentication" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="category" target="21" />
       <module name="products" target="21" />
     </bytecodeTargetLevel>
   </component>

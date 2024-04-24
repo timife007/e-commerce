@@ -20,4 +20,7 @@ public class Category {
 
     @ManyToOne
     private GenderCategory genderCategory;
+
+    @OneToMany(mappedBy = "category")
+    private SubCategory subCategory;
 }

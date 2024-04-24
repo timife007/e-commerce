@@ -2,12 +2,16 @@ package com.timife.model.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Collection;
 
 @Data
 @Entity
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor
 @Table(name = "sub_category")
 public class SubCategory {
@@ -21,4 +25,7 @@ public class SubCategory {
 
     @ManyToOne
     private GenderCategory genderCategory;
+
+    @OneToMany(mappedBy = "")
+    Collection<ShopItem> shopItems;
 }

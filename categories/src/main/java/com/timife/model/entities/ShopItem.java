@@ -17,7 +17,8 @@ public class ShopItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private Category category;
-    private GenderCategory genderCategory;
+
+    @ManyToOne
+    private SubCategory subCategory;
 
 }
