@@ -1,13 +1,12 @@
 package com.timife.services.impl;
 
-import com.timife.model.Category;
-import com.timife.model.GenderCategory;
+import com.timife.model.entities.Category;
+import com.timife.model.entities.GenderCategory;
 import com.timife.model.dtos.CategoryDto;
 import com.timife.model.dtos.GenderDto;
 import com.timife.repositories.CategoryRepository;
 import com.timife.repositories.GenderRepository;
 import com.timife.services.CategoryService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.timife.model;
+package com.timife.model.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
