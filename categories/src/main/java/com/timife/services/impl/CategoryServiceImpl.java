@@ -1,7 +1,10 @@
 package com.timife.services.impl;
 
+import com.timife.model.Category;
 import com.timife.model.GenderCategory;
+import com.timife.model.dtos.CategoryDto;
 import com.timife.model.dtos.GenderDto;
+import com.timife.repositories.CategoryRepository;
 import com.timife.repositories.GenderRepository;
 import com.timife.services.CategoryService;
 import lombok.AllArgsConstructor;
@@ -16,8 +19,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private final GenderRepository genderRepository;
 
+    @Autowired
+    private final CategoryRepository categoryRepository;
+
     @Override
-    public GenderCategory createUpdateCategory(GenderDto genderDto) {
+    public GenderCategory createUpdateGenderCategory(GenderDto genderDto) {
 
         GenderCategory currentCategory = genderRepository.findByName(genderDto.getName());
 
@@ -30,5 +36,23 @@ public class CategoryServiceImpl implements CategoryService {
         }
         currentCategory.setName(genderDto.getName());
         return genderRepository.save(currentCategory);
+    }
+
+    @Override
+    public Category createUpdateCategory(CategoryDto categoryDto) {
+        Category currentCategory = categoryRepository.findByNameAndGender(categoryDto.getName(), categoryDto.getGenderId());
+        GenderCategory genderCategory = genderRepository.findById(categoryDto.getGenderId()).orElseThrow();
+
+        if (currentCategory == null) {
+            Category newCategory = Category
+                    .builder()
+                    .name(categoryDto.getName())
+                    .genderCategory(genderCategory)
+                    .build();
+            return categoryRepository.save(newCategory);
+        }
+        currentCategory.setName(categoryDto.getName());
+        currentCategory.setGenderCategory(genderCategory);
+        return categoryRepository.save(currentCategory);
     }
 }
