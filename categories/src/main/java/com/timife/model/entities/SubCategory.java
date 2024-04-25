@@ -26,6 +26,6 @@ public class SubCategory {
     @ManyToOne
     private GenderCategory genderCategory;
 
-    @OneToMany(mappedBy = "")
+    @OneToMany(mappedBy = "sub_category", cascade = CascadeType.ALL)
     Collection<ShopItem> shopItems;
 }
