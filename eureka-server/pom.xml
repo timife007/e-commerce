@@ -7,10 +7,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>categories</artifactId>
+    <artifactId>eureka-server</artifactId>
     <packaging>jar</packaging>
 
-    <name>categories</name>
+    <name>eureka-server</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -25,20 +25,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.timife</groupId>
-            <artifactId>authentication</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jdbc</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
     </dependencies>
 </project>

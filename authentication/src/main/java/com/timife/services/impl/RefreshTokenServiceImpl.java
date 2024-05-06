@@ -9,6 +9,7 @@ import com.timife.services.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,17 +29,18 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
         RefreshToken token = refreshTokenRepository.findByUser(user);
 
-        if(token == null){
-            RefreshToken newToken =  RefreshToken.builder()
-                    .user(user)
-                    .token(UUID.randomUUID().toString())
-                    .expiryDate(Instant.now().plusMillis(60000))
-                    .build();
-            return refreshTokenRepository.save(newToken);
+        if (token != null) {
+            token.setToken(UUID.randomUUID().toString());
+            token.setExpiryDate(Instant.now().plusMillis(600000));
+            return refreshTokenRepository.save(token);
         }
-        token.setToken(UUID.randomUUID().toString());
-        token.setExpiryDate(Instant.now().plusMillis(600000));
-        return refreshTokenRepository.save(token);
+
+        RefreshToken newToken = RefreshToken.builder()
+                .user(user)
+                .token(UUID.randomUUID().toString())
+                .expiryDate(Instant.now().plusMillis(60000))
+                .build();
+        return refreshTokenRepository.save(newToken);
     }
 
     @Override

@@ -11,6 +11,7 @@
         <module name="profiles" />
         <module name="order-management" />
         <module name="inventory" />
+        <module name="eureka-server" />
         <module name="cart" />
         <module name="analytics" />
         <module name="notification" />

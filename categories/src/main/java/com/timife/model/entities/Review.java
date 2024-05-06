@@ -18,6 +18,7 @@ import java.time.Instant;
 public class Review {
 
     @Id
+    @PrimaryKeyJoinColumn
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
@@ -27,7 +28,7 @@ public class Review {
 
     private Instant date;
 
-    @OneToOne
+    @ManyToOne
     private User user;
 
     @ManyToOne
