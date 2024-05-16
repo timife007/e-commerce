@@ -13,6 +13,7 @@ import com.timife.repositories.UserRepository;
 import com.timife.security.JwtService;
 import com.timife.services.AuthenticationService;
 import com.timife.services.RefreshTokenService;
+import com.timife.utils.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

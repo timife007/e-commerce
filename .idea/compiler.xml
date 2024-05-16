@@ -16,6 +16,7 @@
         <module name="analytics" />
         <module name="notification" />
         <module name="search" />
+        <module name="reviews" />
         <module name="content-management" />
         <module name="payment" />
         <module name="categories" />

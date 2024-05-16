@@ -19,8 +19,6 @@ public class Category {
     private String name;
 
     @ManyToOne
-    private GenderCategory genderCategory;
-
-    @OneToMany(mappedBy = "category")
-    private SubCategory subCategory;
+    @JoinColumn(name = "gender_id", referencedColumnName = "id")
+    private Gender gender;
 }

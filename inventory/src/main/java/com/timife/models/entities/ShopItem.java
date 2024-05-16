@@ -1,4 +1,4 @@
-package com.timife.model.entities;
+package com.timife.models.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -43,17 +43,12 @@ public class ShopItem {
 
     private Collection<Double> sizes;
 
-    @ManyToOne
-    private GenderCategory genderCategory;
+    private Long genderId;
 
-    @ManyToOne
-    private Category category;
+    private Long categoryid;
 
-    @ManyToOne
-    private SubCategory subCategory;
-
-    @OneToMany(mappedBy = "shopItem", cascade = CascadeType.ALL)
-    private Collection<Review> reviews = new ArrayList<>();
+//    @OneToMany(mappedBy = "shopItem", cascade = CascadeType.ALL)
+//    private Collection<Review> reviews = new ArrayList<>();
 
     @OneToMany
     private Collection<String> images = new ArrayList<>();

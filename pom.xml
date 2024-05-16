@@ -27,6 +27,7 @@
         <module>analytics</module>
         <module>content-management</module>
         <module>eureka-server</module>
+        <module>reviews</module>
     </modules>
 
     <properties>

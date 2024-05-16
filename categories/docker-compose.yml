@@ -1,0 +1,16 @@
+services:
+  db:
+    container_name: categories-db
+    image: postgres
+    env_file:
+      - ../env/postgres.env
+    ports:
+      - "5431:5432"
+  pgadmin:
+    container_name: pgadmin-categories
+    image: dpage/pgadmin4
+    env_file:
+      - ../env/pgadmin.env
+    ports:
+      - "5051:80"
+    restart: unless-stopped

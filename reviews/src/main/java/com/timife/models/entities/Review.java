@@ -1,6 +1,5 @@
-package com.timife.model.entities;
+package com.timife.models.entities;
 
-import com.timife.models.entities.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,10 +27,11 @@ public class Review {
 
     private Instant date;
 
-    @ManyToOne
-    private User user;
+    private Integer userId;
 
-    @ManyToOne
-    @JoinColumn(name = "shop_id", referencedColumnName = "id")
-    private ShopItem shopItem;
+    private Integer productId;
+
+//    @ManyToOne
+//    @JoinColumn(name = "shop_id", referencedColumnName = "id")
+//    private ShopItem shopItem;
 }
