@@ -28,6 +28,7 @@
         <module>content-management</module>
         <module>eureka-server</module>
         <module>reviews</module>
+        <module>gateway-service</module>
     </modules>
 
     <properties>

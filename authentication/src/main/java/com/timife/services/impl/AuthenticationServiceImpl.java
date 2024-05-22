@@ -17,6 +17,8 @@ import com.timife.utils.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authManager;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService tokenService;
+    private final UserDetailsService userDetailsService;
 
     @Override
     public RegisterResponse register(User userDto) {
@@ -71,5 +74,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .accessToken(accessToken)
                             .refreshToken(refreshTokenDto.getRefreshToken()).build();
                 }).orElseThrow(() -> new RuntimeException("Refresh Token is not in DB..!!"));
+    }
+
+    @Override
+    public String validateToken(String token) {
+        String userEmail = jwtService.extractUsername(token);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+        if (jwtService.isTokenValid(token, userDetails)) {
+            return "token is valid, grant access...";
+        } else {
+            throw new IllegalArgumentException("token not valid");
+        }
     }
 }

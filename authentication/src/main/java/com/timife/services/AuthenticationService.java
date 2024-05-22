@@ -17,4 +17,6 @@ public interface AuthenticationService {
 
 
     public AuthResponse refreshToken(RefreshTokenRequestDto refreshTokenDto);
+
+    String validateToken(String token);
 }

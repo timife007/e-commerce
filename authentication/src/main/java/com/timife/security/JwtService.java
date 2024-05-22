@@ -6,7 +6,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,9 +45,19 @@ public class JwtService {
         return generateToken(new HashMap<>(), userDetails);
     }
 
+    //Just in case I don't want the userdetails to be used, then I can move this to the gateway.
     public boolean isTokenValid(String token, UserDetails userDetails) { //checks if the token belongs to the userDetails and if the token is still valid, not expired.
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+//        try{
+//            Jwts.parser().verifyWith(getSignInKey()).build().parseSignedClaims(token);
+//            if(!isTokenExpired(token)){
+//                return true;
+//            };
+//            return false;
+//        }catch (Exception e){
+//            throw new IllegalArgumentException("");
+//        }
     }
 
     private boolean isTokenExpired(String token) {

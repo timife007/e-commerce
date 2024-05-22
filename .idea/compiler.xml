@@ -18,6 +18,7 @@
         <module name="search" />
         <module name="reviews" />
         <module name="content-management" />
+        <module name="gateway-service" />
         <module name="payment" />
         <module name="categories" />
         <module name="authentication" />
