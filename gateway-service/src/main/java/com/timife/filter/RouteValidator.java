@@ -13,7 +13,7 @@ public class RouteValidator {
             "/auth/signup",
             "/auth/login",
             "/auth/refreshToken",
-            "/auth/validateToken"
+            "/auth/validate/**"
     );
 
 

@@ -48,9 +48,12 @@ public class AuthController {
 
     @GetMapping("/validate/{token}")
     public String validateToken(@PathVariable("token") String token) {
-//        log.error("VALIDATE API");
-//        authService.validateToken(token);
-        return "validated token";
+        log.error("VALIDATE API");
+        try{
+           return authService.validateToken(token);
+        }catch (Exception e){
+            return e.getLocalizedMessage();
+        }
     }
 
     @PostMapping("vendor/signup")

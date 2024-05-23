@@ -1,6 +1,7 @@
 package com.timife.filter;
 
 import com.timife.JwtUtil;
+import com.timife.feign.AuthFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import javax.ws.rs.ext.ParamConverter;
 
 @Component
 @Slf4j
@@ -21,6 +24,12 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    //Giving circular dependency with AuthFilter and GatewayAutoConfiguration
+//    @Autowired
+//    private AuthFeignClient authFeignClient;
+
+
 
     public AuthenticationFilter(){
         super(Config.class);
@@ -53,6 +62,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     //Issue is with the service communication.
                     restTemplate.getForObject("http://AUTHENTICATION/auth/validate/{token}", String.class, authHeader);
 //                    jwtUtil.validateToken(authHeader);
+//                    authFeignClient.validateToken(authHeader);
                 } catch (Exception e) {
                     System.out.println("invalid token access...");
                     throw new RuntimeException("Unauthorized access to the app" + e.getLocalizedMessage());
