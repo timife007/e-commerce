@@ -26,12 +26,11 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     private JwtUtil jwtUtil;
 
     //Giving circular dependency with AuthFilter and GatewayAutoConfiguration
-//    @Autowired
-//    private AuthFeignClient authFeignClient;
+    @Autowired
+    private AuthFeignClient authFeignClient;
 
 
-
-    public AuthenticationFilter(){
+    public AuthenticationFilter() {
         super(Config.class);
     }
 
@@ -60,9 +59,9 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     //Quite similar to the token validation present in the JwtAuthFilter in the auth service;
                     //However, if auth service should go down, I might not be able to proceed
                     //Issue is with the service communication.
-                    restTemplate.getForObject("http://AUTHENTICATION/auth/validate/{token}", String.class, authHeader);
+//                    restTemplate.getForObject("http://AUTHENTICATION/auth/validate/{token}", String.class, authHeader);
 //                    jwtUtil.validateToken(authHeader);
-//                    authFeignClient.validateToken(authHeader);
+                    authFeignClient.validateToken(authHeader);
                 } catch (Exception e) {
                     System.out.println("invalid token access...");
                     throw new RuntimeException("Unauthorized access to the app" + e.getLocalizedMessage());
