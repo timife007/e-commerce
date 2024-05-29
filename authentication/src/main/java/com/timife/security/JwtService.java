@@ -49,15 +49,6 @@ public class JwtService {
     public boolean isTokenValid(String token, UserDetails userDetails) { //checks if the token belongs to the userDetails and if the token is still valid, not expired.
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
-//        try{
-//            Jwts.parser().verifyWith(getSignInKey()).build().parseSignedClaims(token);
-//            if(!isTokenExpired(token)){
-//                return true;
-//            };
-//            return false;
-//        }catch (Exception e){
-//            throw new IllegalArgumentException("");
-//        }
     }
 
     private boolean isTokenExpired(String token) {

@@ -1,2 +1,6 @@
-package com.timife.services.kafka;public class TokenPublisherService {
+package com.timife.services.kafka;
+
+public interface TokenPublisherService {
+
+    void publish(String token);
 }
