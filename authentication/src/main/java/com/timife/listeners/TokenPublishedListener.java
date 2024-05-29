@@ -30,6 +30,7 @@ public class TokenPublishedListener {
 
         try {
 //            final Map<String, Object> payload = readJsonAsMap(token);
+            log.error("I don't know sha");
             authenticationService.validateToken(token);
         } catch (Exception exception) {
             log.error("Invalid validation: {}", exception.getLocalizedMessage());

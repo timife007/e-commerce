@@ -1,0 +1,10 @@
+/Users/mac/IdeaProjects/e-commerce/gateway-service/src/main/java/com/timife/GatewayServiceApplication.java
+/Users/mac/IdeaProjects/e-commerce/gateway-service/src/main/java/com/timife/services/kafka/TokenPublisherService.java
+/Users/mac/IdeaProjects/e-commerce/gateway-service/src/main/java/com/timife/config/KafkaConfig.java
+/Users/mac/IdeaProjects/e-commerce/gateway-service/src/main/java/com/timife/filter/AuthenticationFilter.java
+/Users/mac/IdeaProjects/e-commerce/gateway-service/src/main/java/com/timife/config/AppConfig.java
+/Users/mac/IdeaProjects/e-commerce/gateway-service/src/main/java/com/timife/services/kafka/impl/TokenPublisherServiceImpl.java
+/Users/mac/IdeaProjects/e-commerce/gateway-service/src/main/java/com/timife/feign/AuthFeignClient.java
+/Users/mac/IdeaProjects/e-commerce/gateway-service/src/main/java/com/timife/filter/RouteValidator.java
+/Users/mac/IdeaProjects/e-commerce/gateway-service/src/main/java/com/timife/JwtUtil.java
+/Users/mac/IdeaProjects/e-commerce/gateway-service/src/main/java/com/timife/config/KafkaConfigProps.java

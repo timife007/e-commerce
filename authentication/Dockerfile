@@ -1,14 +1,18 @@
 FROM maven:3.8-openjdk-17 as builder
 
-COPY src /usr/app/src
-COPY pom.xml /usr/app
+WORKDIR /app
+COPY src ./src
+COPY pom.xml ./pom.xml
 ENV  POSTGRES_DB=e-commerce \
      POSTGRES_PASSWORD=secret \
      POSTGRES_USER=timife
-RUN mvn -f /usr/app/pom.xml clean package
+COPY target/authentication-1.0-SNAPSHOT.jar ./target/
+
+#RUN #mvn -f pom.xml clean package
 
 FROM openjdk:17-alpine
+WORKDIR /app
 
-COPY --from=build /usr/app/target/*.jar /usr/app/app.jar
+COPY --from=builder ./app/target/authentication-1.0-SNAPSHOT.jar ./authentication.jar
 
-ENTRYPOINT ["java", "-jar", "/usr/app/app.jar"]
+CMD ["java", "-jar", "authentication.jar"]

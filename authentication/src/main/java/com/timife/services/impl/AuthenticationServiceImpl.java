@@ -83,7 +83,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (jwtService.isTokenValid(token, userDetails)) {
             return "token is valid, grant access...";
         } else {
-            throw new IllegalArgumentException("token not valid");
+            return "token is not valid please";
+//            throw new IllegalArgumentException("token not valid");
         }
     }
 }

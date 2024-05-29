@@ -2,7 +2,6 @@ package com.timife.security.config;
 
 //import com.timife.security.JwtAuthenticationFilter;
 
-import com.timife.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

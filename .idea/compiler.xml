@@ -34,12 +34,18 @@
       <module name="analytics" options="" />
       <module name="authentication" options="" />
       <module name="cart" options="" />
+      <module name="catalog" options="" />
+      <module name="categories" options="" />
       <module name="category" options="" />
       <module name="content-management" options="" />
+      <module name="eureka-server" options="" />
+      <module name="gateway-service" options="" />
+      <module name="inventory" options="" />
       <module name="notification" options="" />
       <module name="order-management" options="" />
       <module name="payment" options="" />
       <module name="profiles" options="" />
+      <module name="reviews" options="" />
       <module name="search" options="" />
     </option>
   </component>

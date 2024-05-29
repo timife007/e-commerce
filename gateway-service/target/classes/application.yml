@@ -1,3 +1,6 @@
+timife:
+  kafka:
+    topic: token.published
 eureka:
   client:
     service-url:
@@ -19,3 +22,5 @@ spring:
             - Path=/auth/**
           filters:
             - AuthenticationFilter
+server:
+  port: 8088

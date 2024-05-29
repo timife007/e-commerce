@@ -4,7 +4,7 @@ server:
 spring:
   docker:
     compose:
-      file: ./authentication/docker-compose.yml
+      file: ./docker-compose.yml
   datasource:
     url: jdbc:postgresql://localhost:5432/e-commerce
   jpa:
