@@ -17,7 +17,7 @@ public class JwtUtil {
 
     //this way, even if the auth service is down, validation is not affected.
     public void validateToken(final String token){
-        log.error("VALIDATETOKEN CHECK" + Jwts.parser().verifyWith(getSignInKey()).build().parseSignedClaims(token).toString());
+        log.error("VALIDATE-TOKEN CHECK" + Jwts.parser().verifyWith(getSignInKey()).build().parseSignedClaims(token).toString());
 
         Jwts.parser().verifyWith(getSignInKey()).build().parseSignedClaims(token);
     }
