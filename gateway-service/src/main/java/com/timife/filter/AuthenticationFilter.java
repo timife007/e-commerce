@@ -11,8 +11,6 @@ import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFac
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import javax.ws.rs.ext.ParamConverter;
-
 @Component
 @Slf4j
 public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
@@ -28,10 +26,6 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
     @Autowired
     TokenPublisherService tokenPublisherService;
-
-    //Giving circular dependency with AuthFilter and GatewayAutoConfiguration
-//    @Autowired
-//    private AuthFeignClient authFeignClient;
 
 
 
@@ -65,7 +59,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     //However, if auth service should go down, I might not be able to proceed
                     //Issue is with the service communication.
 //                    restTemplate.getForObject("http://AUTHENTICATION/auth/validate/{token}", String.class, authHeader);
-                    jwtUtil.validateToken(authHeader + "e");
+                    jwtUtil.validateToken(authHeader);
 //                    tokenPublisherService.publish(authHeader);
 //                    authFeignClient.validateToken(authHeader);
                 } catch (Exception e) {

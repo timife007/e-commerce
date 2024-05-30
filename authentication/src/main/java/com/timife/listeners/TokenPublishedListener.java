@@ -24,16 +24,17 @@ public class TokenPublishedListener {
 
 //    private final NotificationService notificationService;
 
-    @KafkaListener(topics = "token.published")
+    @KafkaListener(id = "token",topics = "token.published")
     public String listens(final String token) {
         log.info("Received Token: {}", token);
 
         try {
 //            final Map<String, Object> payload = readJsonAsMap(token);
-            log.error("I don't know sha");
-            authenticationService.validateToken(token);
+            String validate = authenticationService.validateToken(token);
+            log.error(validate);
         } catch (Exception exception) {
             log.error("Invalid validation: {}", exception.getLocalizedMessage());
+            throw new IllegalArgumentException(exception.getLocalizedMessage());
         }
         return token;
     }

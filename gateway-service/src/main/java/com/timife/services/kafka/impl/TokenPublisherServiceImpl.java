@@ -24,8 +24,8 @@ public class TokenPublisherServiceImpl implements TokenPublisherService {
     public void publish(String token) {
         try {
 //            final String payload = objectMapper.writeValueAsString(token);
-            kafkaTemplate.send("token.published", token);
-            log.info(token + " published");
+            kafkaTemplate.send(kafkaConfigProps.getTopic(), token);
+            log.info("PUBLISHED: " + token);
         } catch (Exception e) {
             throw new RuntimeException("Unable to publish token");
         }
