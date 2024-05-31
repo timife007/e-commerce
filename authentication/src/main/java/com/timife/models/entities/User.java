@@ -1,11 +1,13 @@
 package com.timife.models.entities;
 
+import com.timife.models.Interest;
 import com.timife.models.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,12 +25,15 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private DateTime dateOfBirth;
+    @Enumerated(EnumType.STRING)
+    private Interest mostlyInterested;
 
     private String password;
 
