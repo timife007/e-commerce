@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface SectionRepository extends JpaRepository<Section, Long> {
 
     @Query(
-            value = "SELECT * FROM section u WHERE category_id = ?1",
+            value = "SELECT * FROM section u WHERE u.name = ?1 AND u.category_id = ?2",
             nativeQuery = true)
-    Section findSectionByCategory(Long categoryId);
+    Section findSectionByNameAndCategory(String name, Long categoryId);
 }

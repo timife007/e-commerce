@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "categories")
 @Builder
@@ -21,4 +23,7 @@ public class Category {
     @ManyToOne
     @JoinColumn(name = "gender_id", referencedColumnName = "id")
     private Long genderId;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "categoryId")
+    private List<Long> sectionIds;
 }

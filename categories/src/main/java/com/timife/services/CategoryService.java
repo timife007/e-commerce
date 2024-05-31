@@ -12,10 +12,10 @@ public interface CategoryService {
 
 
 
-    Category createCategory(CategoryDto categoryDto);
+    CategoryDto createCategory(CategoryDto categoryDto);
 
-    Category updateCategory(int categoryId, CategoryDto categoryDto);
+    CategoryDto updateCategory(int categoryId, CategoryDto categoryDto);
 
-    List<Category> getAllCategories();
+    List<CategoryDto> getAllCategories();
 
 }

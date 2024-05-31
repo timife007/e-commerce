@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface GenderService {
 
-    List<Gender> getAllGenders();
+    List<GenderDto> getAllGenders();
 
-    Gender createUpdateGender(GenderDto genderDto);
+    GenderDto createGender(GenderDto genderDto);
 
-    Gender updateGender(Long genderId, GenderDto genderDto);
+    GenderDto updateGender(int genderId, GenderDto genderDto);
 
 }

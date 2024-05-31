@@ -25,7 +25,7 @@ public class CategoriesController {
 
     private final GenderService genderService;
 
-    @PostMapping("/categories")
+    @PostMapping("/category")
     public ResponseEntity<?> saveCategory(@RequestBody CategoryDto request) {
         try {
             return ResponseEntity.ok(categoryService.createCategory(request));
@@ -34,7 +34,7 @@ public class CategoriesController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/category/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable("id") int id, @RequestBody CategoryDto request) {
         try {
             return ResponseEntity.ok(categoryService.updateCategory(id, request));
@@ -46,7 +46,16 @@ public class CategoriesController {
     @PostMapping("/gender")
     public ResponseEntity<?> saveGender(@RequestBody GenderDto request) {
         try {
-            return ResponseEntity.ok(genderService.createUpdateGender(request));
+            return ResponseEntity.ok(genderService.createGender(request));
+        } catch (Exception e) {
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PutMapping("/gender/{id}")
+    public ResponseEntity<?> update(@PathVariable int id,@RequestBody GenderDto request) {
+        try {
+            return ResponseEntity.ok(genderService.updateGender(id,request));
         } catch (Exception e) {
             return errorEntity(e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
         }
