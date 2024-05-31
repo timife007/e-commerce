@@ -6,6 +6,7 @@ import com.timife.models.requests.UserRequestDto;
 import com.timife.repositories.RefreshTokenRepository;
 import com.timife.services.AuthenticationService;
 import com.timife.services.CategoryService;
+import com.timife.services.GenderService;
 import com.timife.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,8 @@ import static com.timife.utils.ValidationUtils.validatePasswordAndEmail;
 public class CategoriesController {
 
     private final CategoryService categoryService;
+
+    private final GenderService genderService;
 
     @PostMapping("/categories")
     public ResponseEntity<?> saveCategory(@RequestBody CategoryDto request) {
@@ -43,7 +46,7 @@ public class CategoriesController {
     @PostMapping("/gender")
     public ResponseEntity<?> saveGender(@RequestBody GenderDto request) {
         try {
-            return ResponseEntity.ok(categoryService.createUpdateGender(request));
+            return ResponseEntity.ok(genderService.createUpdateGender(request));
         } catch (Exception e) {
             return errorEntity(e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
         }
@@ -61,7 +64,7 @@ public class CategoriesController {
     @GetMapping("/genders")
     public ResponseEntity<?> getAllGenders() {
         try {
-            return ResponseEntity.ok(categoryService.getAllGenders());
+            return ResponseEntity.ok(genderService.getAllGenders());
         } catch (Exception e) {
             return errorEntity(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }

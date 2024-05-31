@@ -10,9 +10,7 @@ import java.util.List;
 
 public interface CategoryService {
 
-    Gender createUpdateGender(GenderDto genderDto);
 
-    List<Gender> getAllGenders();
 
     Category createCategory(CategoryDto categoryDto);
 

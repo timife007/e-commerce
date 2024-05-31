@@ -1,7 +1,6 @@
 package com.timife.filter;
 
 import com.timife.JwtUtil;
-import com.timife.feign.AuthFeignClient;
 import com.timife.services.kafka.TokenPublisherService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;

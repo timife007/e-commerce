@@ -20,48 +20,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-
     @Autowired
     private final GenderRepository genderRepository;
 
     @Autowired
     private final CategoryRepository categoryRepository;
 
-    @Override
-    public Gender createUpdateGender(GenderDto genderDto) {
-
-        Gender currentGender = genderRepository.findByName(genderDto.getName());
-
-        if (currentGender == null) {
-            Gender newGender = Gender
-                    .builder()
-                    .name(genderDto.getName())
-                    .build();
-            return genderRepository.save(newGender);
-        }
-        currentGender.setName(genderDto.getName());
-        return genderRepository.save(currentGender);
-    }
-
-
-    @Override
-    public List<Gender> getAllGenders() {
-        return genderRepository.findAll();
-    }
 
     @Override
     public Category createCategory(CategoryDto categoryDto) {
-        Category currentCategory = categoryRepository.findByNameAndGender(categoryDto.getName(), categoryDto.getGenderId());
+        Category currentCategory = categoryRepository.findCategoryByGender(categoryDto.getGenderId());
         Gender gender = genderRepository.findById(categoryDto.getGenderId()).orElseThrow();
 
         if (currentCategory == null) {
             Category newCategory = Category
                     .builder()
                     .name(categoryDto.getName())
-                    .gender(gender)
+                    .genderId(categoryDto.getGenderId())
                     .build();
             return categoryRepository.save(newCategory);
-        }else {
+        } else {
             throw new CustomException("Category already created", HttpStatus.CREATED);
         }
     }
@@ -71,6 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category newCategory = categoryRepository.findById((long) categoryId).orElseThrow();
 
         newCategory.setName(categoryDto.getName());
+        newCategory.setGenderId(categoryDto.getGenderId());
         return categoryRepository.save(newCategory);
     }
 
@@ -78,5 +57,4 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
-
 }

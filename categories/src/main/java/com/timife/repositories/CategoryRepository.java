@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Query(
-            value = "SELECT * FROM category u WHERE u.name = ?1 AND u.gender.id = ?2",
+            value = "SELECT * FROM category u WHERE gender_id = ?1",
             nativeQuery = true)
-    Category findByNameAndGender(String name, Long gender);
+    Category findCategoryByGender(Long genderId);
 }
