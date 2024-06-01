@@ -10,14 +10,12 @@ import java.util.List;
 
 public interface CategoryService {
 
-    Gender createUpdateGender(GenderDto genderDto);
 
-    List<Gender> getAllGenders();
 
-    Category createCategory(CategoryDto categoryDto);
+    CategoryDto createCategory(CategoryDto categoryDto);
 
-    Category updateCategory(int categoryId, CategoryDto categoryDto);
+    CategoryDto updateCategory(int categoryId, CategoryDto categoryDto);
 
-    List<Category> getAllCategories();
+    List<CategoryDto> getAllCategories();
 
 }

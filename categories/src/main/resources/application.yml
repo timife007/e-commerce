@@ -4,7 +4,9 @@ server:
 spring:
   docker:
     compose:
-      file: ./categories/docker-compose.yml
+      file: ./docker-compose.yml
+  profiles:
+    active: production
   datasource:
     url: jdbc:postgresql://localhost:5432/e-commerce
   jpa:

@@ -5,9 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
 @Builder
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class ErrorResponse {
+public class GenderResponse {
+
+    private Long id;
+
+    private String name;
 }

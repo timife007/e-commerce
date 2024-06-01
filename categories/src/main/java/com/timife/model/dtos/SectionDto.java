@@ -1,13 +1,18 @@
-package com.timife.model.responses;
+package com.timife.model.dtos;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorResponse {
+@Builder
+@Data
+public class SectionDto {
+
+    private Long id;
+    private String name;
+    private Long categoryId;
 }

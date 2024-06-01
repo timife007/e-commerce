@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface GenderRepository extends JpaRepository<Gender, Long> {
 
     Gender findByName(String name);
+
 }

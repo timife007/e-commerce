@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "categories")
 @Builder
@@ -15,10 +17,13 @@ import lombok.NoArgsConstructor;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "gender_id", referencedColumnName = "id")
-    private Gender gender;
+    private Long genderId;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "categoryId")
+    private List<Long> sectionIds;
 }
