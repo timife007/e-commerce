@@ -9,6 +9,7 @@ import com.timife.services.CategoryService;
 import com.timife.services.GenderService;
 import com.timife.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +22,10 @@ import static com.timife.utils.ValidationUtils.validatePasswordAndEmail;
 @RequiredArgsConstructor
 public class CategoriesController {
 
+    @Autowired
     private final CategoryService categoryService;
 
+    @Autowired
     private final GenderService genderService;
 
     @PostMapping("/category")
@@ -53,7 +56,7 @@ public class CategoriesController {
     }
 
     @PutMapping("/gender/{id}")
-    public ResponseEntity<?> update(@PathVariable int id,@RequestBody GenderDto request) {
+    public ResponseEntity<?> updateGender(@PathVariable int id,@RequestBody GenderDto request) {
         try {
             return ResponseEntity.ok(genderService.updateGender(id,request));
         } catch (Exception e) {

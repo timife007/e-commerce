@@ -24,6 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private final CategoryRepository categoryRepository;
 
+    @Autowired
     private final Mapper<Category, CategoryDto> categoryDtoMapper;
 
 

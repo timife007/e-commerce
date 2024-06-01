@@ -20,10 +20,10 @@ public class Category {
     private Long id;
     private String name;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Gender.class)
     @JoinColumn(name = "gender_id", referencedColumnName = "id")
     private Long genderId;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "categoryId")
+    @OneToMany(targetEntity = Section.class,cascade = CascadeType.ALL, mappedBy = "categoryId")
     private List<Long> sectionIds;
 }

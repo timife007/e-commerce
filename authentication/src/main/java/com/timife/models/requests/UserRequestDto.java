@@ -1,11 +1,13 @@
 package com.timife.models.requests;
 
+import com.timife.models.Interest;
 import com.timife.models.Role;
 import com.timife.models.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 @Data
 @Builder
@@ -24,7 +26,9 @@ public class UserRequestDto {
                 this.lastName,
                 this.email,
                 Role.USER,
-                this.password
+                "",
+                this.password,
+                Interest.MENSWEAR
         );
     }
 
@@ -35,7 +39,9 @@ public class UserRequestDto {
                 this.lastName,
                 this.email,
                 Role.ADMIN,
-                this.password
+                "",
+                this.password,
+                Interest.MENSWEAR
         );
     }
 
@@ -46,7 +52,9 @@ public class UserRequestDto {
                 this.lastName,
                 this.email,
                 Role.VENDOR,
-                this.password
+                "",
+                this.password,
+                Interest.MENSWEAR
         );
     }
 

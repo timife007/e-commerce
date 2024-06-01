@@ -20,6 +20,6 @@ public class Gender {
     private Long id;
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gender")
+    @OneToMany(targetEntity = Category.class, cascade = CascadeType.ALL, mappedBy = "genderId")
     private List<Long> categoryIds;
 }

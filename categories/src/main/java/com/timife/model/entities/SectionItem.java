@@ -20,7 +20,7 @@ public class SectionItem {
 
     private String sectionItemName;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Section.class)
     @JoinColumn(name = "section_id", referencedColumnName = "id")
     private Long sectionId;
 }

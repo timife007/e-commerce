@@ -18,6 +18,7 @@ public class SectionServiceImpl implements SectionService {
     @Autowired
     private final SectionRepository sectionRepository;
 
+    @Autowired
     private final Mapper<Section, SectionDto> sectionDtoMapper;
 
     @Override

@@ -8,15 +8,18 @@ import com.timife.repositories.GenderRepository;
 import com.timife.services.GenderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @RequiredArgsConstructor
+@Service
 public class GenderServiceImpl implements GenderService {
 
     @Autowired
     private final GenderRepository genderRepository;
 
+    @Autowired
     private final Mapper<Gender, GenderDto> modelMapper;
 
     @Override
