@@ -12,8 +12,5 @@ import java.util.List;
 @Data
 @Builder
 public class GenderDto {
-    int id;
     String name;
-
-    List<CategoryDto> categoryDtos;
 }

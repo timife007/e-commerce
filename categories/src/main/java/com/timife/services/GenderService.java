@@ -2,15 +2,16 @@ package com.timife.services;
 
 import com.timife.model.dtos.GenderDto;
 import com.timife.model.entities.Gender;
+import com.timife.model.responses.GenderResponse;
 
 import java.util.List;
 
 public interface GenderService {
 
-    List<GenderDto> getAllGenders();
+    List<GenderResponse> getAllGenders();
 
-    GenderDto createGender(GenderDto genderDto);
+    GenderResponse createGender(GenderDto genderDto);
 
-    GenderDto updateGender(int genderId, GenderDto genderDto);
+    GenderResponse updateGender(int genderId, GenderDto genderDto);
 
 }

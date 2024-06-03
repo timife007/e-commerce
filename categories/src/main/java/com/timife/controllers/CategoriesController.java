@@ -2,12 +2,8 @@ package com.timife.controllers;
 
 import com.timife.model.dtos.CategoryDto;
 import com.timife.model.dtos.GenderDto;
-import com.timife.models.requests.UserRequestDto;
-import com.timife.repositories.RefreshTokenRepository;
-import com.timife.services.AuthenticationService;
 import com.timife.services.CategoryService;
 import com.timife.services.GenderService;
-import com.timife.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.timife.utils.ValidationUtils.errorEntity;
-import static com.timife.utils.ValidationUtils.validatePasswordAndEmail;
+
 
 @RestController
 @RequestMapping("/product")

@@ -8,7 +8,7 @@ spring:
   profiles:
     active: production
   datasource:
-    url: jdbc:postgresql://localhost:5432/e-commerce
+    url: jdbc:postgresql://localhost:5432/ecommerce-auth
   jpa:
     hibernate:
       ddl-auto: create-drop
