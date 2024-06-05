@@ -12,6 +12,6 @@ public interface GenderService {
 
     GenderResponse createGender(GenderDto genderDto);
 
-    GenderResponse updateGender(int genderId, GenderDto genderDto);
+    GenderResponse updateGender(Long genderId, GenderDto genderDto);
 
 }

@@ -8,7 +8,9 @@ spring:
 #  profiles:
 #    active: production
   datasource:
-    url: jdbc:postgresql://localhost:5432/ecommerce-categories
+    url: jdbc:postgresql://localhost:5434/ecommerce-categories
+    password: secret
+    username: timife
   jpa:
     hibernate:
       ddl-auto: create-drop

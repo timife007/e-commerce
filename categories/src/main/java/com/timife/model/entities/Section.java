@@ -23,10 +23,10 @@ public class Section {
 
     private String sectionName;
 
-    @ManyToOne(targetEntity = Category.class)
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private Long categoryId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    @OneToMany(targetEntity = SectionItem.class,cascade = CascadeType.ALL, mappedBy = "sectionId")
-    private List<Long> sectionItemIds;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "section")
+    private List<SectionItem> sectionItems;
 }

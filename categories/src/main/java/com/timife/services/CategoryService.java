@@ -15,7 +15,7 @@ public interface CategoryService {
 
     CategoryResponse createCategory(CategoryDto categoryDto);
 
-    CategoryResponse updateCategory(int categoryId, CategoryDto categoryDto);
+    CategoryResponse updateCategory(Long categoryId, CategoryDto categoryDto);
 
     List<CategoryResponse> getAllCategories();
 

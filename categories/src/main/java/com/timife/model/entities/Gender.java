@@ -1,10 +1,8 @@
 package com.timife.model.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.util.List;
 
 @Builder
@@ -16,10 +14,10 @@ import java.util.List;
 public class Gender {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id;
+    String name;
 
-    @OneToMany(targetEntity = Category.class, cascade = CascadeType.ALL, mappedBy = "genderId")
-    private List<Long> categoryIds;
+    @OneToMany(targetEntity = Category.class, cascade = CascadeType.ALL, mappedBy = "gender")
+    List<Category> categories;
 }

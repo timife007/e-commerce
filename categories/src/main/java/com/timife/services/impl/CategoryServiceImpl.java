@@ -25,32 +25,32 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private final CategoryRepository categoryRepository;
 
+    @Autowired
+    private final GenderRepository genderRepository;
+
 //    @Autowired
 //    private final Mapper<Category, CategoryDto> categoryDtoMapper;
 
 
     @Override
     public CategoryResponse createCategory(CategoryDto categoryDto) {
-        Category currentCategory = categoryRepository.findCategoryByNameAndGender(categoryDto.getName(), categoryDto.getGenderId());
-        if (currentCategory == null) {
-            Category newCategory = Category.builder().name(categoryDto.getName()).genderId(categoryDto.getGenderId()).build();
-            Category savedCategory = categoryRepository.save(newCategory);
-            return CategoryResponse.builder().id(savedCategory.getId()).name(savedCategory.getName()).genderId(savedCategory.getGenderId()).build();
-        } else {
-            throw new CustomException("Category already created", HttpStatus.CREATED);
-        }
+        Gender gender = genderRepository.findById(categoryDto.getGenderId()).orElseThrow();
+        Category newCategory = Category.builder().name(categoryDto.getName()).gender(gender).build();
+        Category savedCategory = categoryRepository.save(newCategory);
+        return CategoryResponse.builder().id(savedCategory.getId()).name(savedCategory.getName()).genderId(gender.getId()).build();
     }
 
     @Override
-    public CategoryResponse updateCategory(int categoryId, CategoryDto categoryDto) {
+    public CategoryResponse updateCategory(Long categoryId, CategoryDto categoryDto) {
         Category currentCategory = categoryRepository.findById((long) categoryId).orElseThrow();
+        Gender gender = genderRepository.findById(categoryDto.getGenderId()).orElseThrow();
 
         currentCategory.setName(categoryDto.getName());
-        currentCategory.setGenderId(categoryDto.getGenderId());
+        currentCategory.setGender(gender);
         Category savedCategory = categoryRepository.save(currentCategory);
-        return CategoryResponse.builder().id((long) categoryId)
+        return CategoryResponse.builder().id(categoryId)
                 .name(savedCategory.getName())
-                .genderId(savedCategory.getGenderId())
+                .genderId(gender.getId())
                 .build();
     }
 
@@ -59,7 +59,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository
                 .findAll()
                 .stream()
-                .map((category) -> CategoryResponse.builder().id(category.getId()).name(category.getName()).genderId(category.getGenderId()).build())
+                .map((category) -> CategoryResponse.builder().id(category.getId()).name(category.getName()).genderId(category.getGender().getId()).build())
                 .toList();
     }
 }

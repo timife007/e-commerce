@@ -16,14 +16,14 @@ import java.util.List;
 @NoArgsConstructor
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
 
-    @ManyToOne(targetEntity = Gender.class)
-    @JoinColumn(name = "gender_id", referencedColumnName = "id")
-    private Long genderId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "genderId")
+    Gender gender;
 
-    @OneToMany(targetEntity = Section.class,cascade = CascadeType.ALL, mappedBy = "categoryId")
-    private List<Long> sectionIds;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
+    private List<Section> sectionIds;
 }

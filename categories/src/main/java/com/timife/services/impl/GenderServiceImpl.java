@@ -5,6 +5,7 @@ import com.timife.model.entities.Category;
 import com.timife.model.entities.Gender;
 import com.timife.model.mappers.Mapper;
 import com.timife.model.responses.GenderResponse;
+import com.timife.repositories.CategoryRepository;
 import com.timife.repositories.GenderRepository;
 import com.timife.services.GenderService;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +22,16 @@ public class GenderServiceImpl implements GenderService {
     private final GenderRepository genderRepository;
 
     @Autowired
+    private final CategoryRepository categoryRepository;
+
+    @Autowired
     private final Mapper<Gender, GenderDto> modelMapper;
 
     @Override
     public List<GenderResponse> getAllGenders() {
         return genderRepository.findAll()
                 .stream()
-                .map((gender) -> GenderResponse.builder().id(gender.getId()).name(gender.getName()).build())
+                .map((gender) -> GenderResponse.builder().id(gender.getId()).name(gender.getName()).categories(categoryRepository.findAll()).build())
                 .toList();
     }
 
@@ -48,7 +52,7 @@ public class GenderServiceImpl implements GenderService {
     }
 
     @Override
-    public GenderResponse updateGender(int genderId, GenderDto genderDto) {
+    public GenderResponse updateGender(Long genderId, GenderDto genderDto) {
         Gender newGender = genderRepository.findById((long) genderId).orElseThrow();
         newGender.setName(genderDto.getName());
         Gender savedGender = genderRepository.save(newGender);

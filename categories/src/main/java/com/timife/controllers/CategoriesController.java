@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 import static com.timife.utils.ValidationUtils.errorEntity;
 
 
@@ -34,7 +36,7 @@ public class CategoriesController {
     }
 
     @PutMapping("/category/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable("id") int id, @RequestBody CategoryDto request) {
+    public ResponseEntity<?> updateCategory(@PathVariable("id") Long id, @RequestBody CategoryDto request) {
         try {
             return ResponseEntity.ok(categoryService.updateCategory(id, request));
         } catch (Exception e) {
@@ -52,7 +54,7 @@ public class CategoriesController {
     }
 
     @PutMapping("/gender/{id}")
-    public ResponseEntity<?> updateGender(@PathVariable int id,@RequestBody GenderDto request) {
+    public ResponseEntity<?> updateGender(@PathVariable Long id,@RequestBody GenderDto request) {
         try {
             return ResponseEntity.ok(genderService.updateGender(id,request));
         } catch (Exception e) {
@@ -64,6 +66,17 @@ public class CategoriesController {
     public ResponseEntity<?> getAllCategories() {
         try {
             return ResponseEntity.ok(categoryService.getAllCategories());
+        } catch (Exception e) {
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/categories/{id}")
+    public ResponseEntity<?> getGenderCategories(
+            @PathVariable("id") Long genderId
+    ) {
+        try {
+            return ResponseEntity.ok(categoryService.getAllCategories().stream().filter((category) -> Objects.equals(category.getGenderId(), genderId)));
         } catch (Exception e) {
             return errorEntity(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
