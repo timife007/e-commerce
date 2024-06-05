@@ -34,10 +34,17 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponse createCategory(CategoryDto categoryDto) {
-        Gender gender = genderRepository.findById(categoryDto.getGenderId()).orElseThrow();
-        Category newCategory = Category.builder().name(categoryDto.getName()).gender(gender).build();
-        Category savedCategory = categoryRepository.save(newCategory);
-        return CategoryResponse.builder().id(savedCategory.getId()).name(savedCategory.getName()).genderId(gender.getId()).build();
+        var savedCategory = categoryRepository.findByNameAndGenderId(categoryDto.getName(), categoryDto.getGenderId());
+        if(savedCategory == null){
+            Gender gender = genderRepository.findById(categoryDto.getGenderId()).orElseThrow();
+            Category newCategory = Category.builder().name(categoryDto.getName()).gender(gender).build();
+            gender.getCategories().add(newCategory);
+            genderRepository.save(gender);
+            var category = categoryRepository.findByNameAndGenderId(categoryDto.getName(), categoryDto.getGenderId());
+            return CategoryResponse.builder().id(category.getId()).name(category.getName()).genderId(category.getGender().getId()).build();
+        }else{
+            throw new IllegalArgumentException("Category already present");
+        }
     }
 
     @Override

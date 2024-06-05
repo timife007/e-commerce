@@ -9,10 +9,7 @@ import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    @Query(
-            value = "SELECT u FROM Category u WHERE u.name = ?1 AND u.gender_id = ?2 LIMIT 1",
-            nativeQuery = true)
-    Optional<Category> findCategoryByNameAndGender(String name, Long genderId);
+    Category findByNameAndGenderId(String name, Long genderId);
 
     @Query(value = "SELECT u FROM Category u where u.gender.id = ?1")
     Optional<List<Category>> findByGenderId(Long genderId);

@@ -31,7 +31,7 @@ public class GenderServiceImpl implements GenderService {
     public List<GenderResponse> getAllGenders() {
         return genderRepository.findAll()
                 .stream()
-                .map((gender) -> GenderResponse.builder().id(gender.getId()).name(gender.getName()).categories(categoryRepository.findAll()).build())
+                .map((gender) -> GenderResponse.builder().id(gender.getId()).name(gender.getName()).categories(gender.getCategories()).build())
                 .toList();
     }
 

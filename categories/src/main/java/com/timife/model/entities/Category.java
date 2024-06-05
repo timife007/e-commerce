@@ -20,7 +20,7 @@ public class Category {
     private Long id;
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "genderId")
     Gender gender;
 
