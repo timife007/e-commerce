@@ -7,7 +7,9 @@ import com.timife.model.entities.Gender;
 import com.timife.model.mappers.Mapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class GenderMapper implements Mapper<Gender, GenderDto> {
 

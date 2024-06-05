@@ -5,7 +5,9 @@ import com.timife.model.entities.Category;
 import com.timife.model.mappers.Mapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class CategoryMapper implements Mapper<Category, CategoryDto> {
 

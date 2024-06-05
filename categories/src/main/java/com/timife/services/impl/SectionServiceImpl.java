@@ -1,8 +1,11 @@
 package com.timife.services.impl;
 
 import com.timife.model.dtos.SectionDto;
+import com.timife.model.entities.Category;
 import com.timife.model.entities.Section;
 import com.timife.model.mappers.Mapper;
+import com.timife.model.responses.SectionResponse;
+import com.timife.repositories.CategoryRepository;
 import com.timife.repositories.SectionRepository;
 import com.timife.services.SectionService;
 import lombok.RequiredArgsConstructor;
@@ -18,30 +21,40 @@ public class SectionServiceImpl implements SectionService {
     @Autowired
     private final SectionRepository sectionRepository;
 
+    @Autowired
+    private final CategoryRepository categoryRepository;
+
+    @Autowired
     private final Mapper<Section, SectionDto> sectionDtoMapper;
 
     @Override
-    public SectionDto createSection(SectionDto sectionDto) {
+    public SectionResponse createSection(SectionDto sectionDto) {
         var currentSection = sectionRepository.findSectionByNameAndCategory(sectionDto.getName(), sectionDto.getCategoryId());
 
         if (currentSection == null) {
             Section newSection = Section.builder().sectionName(sectionDto.getName()).build();
-            return sectionDtoMapper.mapTo(sectionRepository.save(newSection));
+            Section savedSection = sectionRepository.save(newSection);
+
+            return SectionResponse.builder().id(savedSection.getId()).name(savedSection.getSectionName()).categoryId(savedSection.getCategory().getId()).build();
         }
         throw new IllegalArgumentException("Section already saved");
     }
 
     @Override
-    public SectionDto updateSection(int sectionId, SectionDto sectionDto) {
+    public SectionResponse updateSection(int sectionId, SectionDto sectionDto) {
 
         Section oldSection = sectionRepository.findById((long) sectionId).orElseThrow();
+        Category category = categoryRepository.findById((long) sectionDto.getCategoryId()).orElseThrow();
         oldSection.setSectionName(sectionDto.getName());
-        oldSection.setCategoryId(sectionDto.getCategoryId());
-        return sectionDtoMapper.mapTo(sectionRepository.save(oldSection));
+        oldSection.setCategory(category);
+        Section savedSection = sectionRepository.save(oldSection);
+        return SectionResponse.builder().id(savedSection.getId()).name(savedSection.getSectionName()).categoryId(savedSection.getCategory().getId()).build();
     }
 
     @Override
-    public List<SectionDto> getAllSections() {
-        return sectionRepository.findAll().stream().map(sectionDtoMapper::mapTo).toList();
+    public List<SectionResponse> getAllSections() {
+        return sectionRepository.findAll().stream()
+                .map((section) -> SectionResponse.builder().id(section.getId()).name(section.getSectionName()).categoryId(section.getCategory().getId()).build())
+                .toList();
     }
 }

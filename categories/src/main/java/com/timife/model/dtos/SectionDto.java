@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class SectionDto {
 
-    private Long id;
+    private Integer id;
     private String name;
-    private Long categoryId;
+    private Integer categoryId;
 }

@@ -12,8 +12,8 @@ import java.util.List;
 @Data
 @Builder
 public class CategoryDto {
-    Long id;
+//    Long id;
     String name;
     Long genderId;
-    List<SectionDto> sectionDtoList;
+//    List<SectionDto> sectionDtoList;
 }

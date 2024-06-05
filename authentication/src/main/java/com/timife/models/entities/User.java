@@ -31,11 +31,12 @@ public class User implements UserDetails {
     private String email;
     @Enumerated(EnumType.STRING)
     private Role role;
-    private DateTime dateOfBirth;
-    @Enumerated(EnumType.STRING)
-    private Interest mostlyInterested;
+    private String dateOfBirth;
+
 
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Interest mostlyInterested;
 
 
     @Override

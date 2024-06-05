@@ -5,6 +5,7 @@ import com.timife.model.entities.Gender;
 import com.timife.model.dtos.CategoryDto;
 import com.timife.model.dtos.GenderDto;
 import com.timife.model.mappers.Mapper;
+import com.timife.model.responses.CategoryResponse;
 import com.timife.repositories.CategoryRepository;
 import com.timife.repositories.GenderRepository;
 import com.timife.services.CategoryService;
@@ -24,31 +25,48 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private final CategoryRepository categoryRepository;
 
-    private final Mapper<Category, CategoryDto> categoryDtoMapper;
+    @Autowired
+    private final GenderRepository genderRepository;
+
+//    @Autowired
+//    private final Mapper<Category, CategoryDto> categoryDtoMapper;
 
 
     @Override
-    public CategoryDto createCategory(CategoryDto categoryDto) {
-        Category currentCategory = categoryRepository.findCategoryByNameAndGender(categoryDto.getName(),categoryDto.getGenderId());
-        if (currentCategory == null) {
-            Category newCategory = categoryDtoMapper.mapFrom(categoryDto);
-            return categoryDtoMapper.mapTo(categoryRepository.save(newCategory));
-        } else {
-            throw new CustomException("Category already created", HttpStatus.CREATED);
+    public CategoryResponse createCategory(CategoryDto categoryDto) {
+        var savedCategory = categoryRepository.findByNameAndGenderId(categoryDto.getName(), categoryDto.getGenderId());
+        if(savedCategory == null){
+            Gender gender = genderRepository.findById(categoryDto.getGenderId()).orElseThrow();
+            Category newCategory = Category.builder().name(categoryDto.getName()).gender(gender).build();
+            gender.getCategories().add(newCategory);
+            genderRepository.save(gender);
+            var category = categoryRepository.findByNameAndGenderId(categoryDto.getName(), categoryDto.getGenderId());
+            return CategoryResponse.builder().id(category.getId()).name(category.getName()).genderId(category.getGender().getId()).build();
+        }else{
+            throw new IllegalArgumentException("Category already present");
         }
     }
 
     @Override
-    public CategoryDto updateCategory(int categoryId, CategoryDto categoryDto) {
+    public CategoryResponse updateCategory(Long categoryId, CategoryDto categoryDto) {
         Category currentCategory = categoryRepository.findById((long) categoryId).orElseThrow();
+        Gender gender = genderRepository.findById(categoryDto.getGenderId()).orElseThrow();
 
         currentCategory.setName(categoryDto.getName());
-        currentCategory.setGenderId(categoryDto.getGenderId());
-        return categoryDtoMapper.mapTo(categoryRepository.save(currentCategory));
+        currentCategory.setGender(gender);
+        Category savedCategory = categoryRepository.save(currentCategory);
+        return CategoryResponse.builder().id(categoryId)
+                .name(savedCategory.getName())
+                .genderId(gender.getId())
+                .build();
     }
 
     @Override
-    public List<CategoryDto> getAllCategories() {
-        return categoryRepository.findAll().stream().map(categoryDtoMapper::mapTo).toList();
+    public List<CategoryResponse> getAllCategories() {
+        return categoryRepository
+                .findAll()
+                .stream()
+                .map((category) -> CategoryResponse.builder().id(category.getId()).name(category.getName()).genderId(category.getGender().getId()).build())
+                .toList();
     }
 }
