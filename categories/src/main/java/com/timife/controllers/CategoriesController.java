@@ -2,8 +2,10 @@ package com.timife.controllers;
 
 import com.timife.model.dtos.CategoryDto;
 import com.timife.model.dtos.GenderDto;
+import com.timife.model.dtos.SubcategoryDto;
 import com.timife.services.CategoryService;
 import com.timife.services.GenderService;
+import com.timife.services.SubcategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,12 +28,15 @@ public class CategoriesController {
     @Autowired
     private final GenderService genderService;
 
+    @Autowired
+    private final SubcategoryService subcategoryService;
+
     @PostMapping("/category")
     public ResponseEntity<?> saveCategory(@RequestBody CategoryDto request) {
         try {
             return ResponseEntity.ok(categoryService.createCategory(request));
         } catch (Exception e) {
-            return errorEntity(e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.CREATED);
         }
     }
 
@@ -40,7 +45,7 @@ public class CategoriesController {
         try {
             return ResponseEntity.ok(categoryService.updateCategory(id, request));
         } catch (Exception e) {
-            return errorEntity(e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.CREATED);
         }
     }
 
@@ -49,7 +54,7 @@ public class CategoriesController {
         try {
             return ResponseEntity.ok(genderService.createGender(request));
         } catch (Exception e) {
-            return errorEntity(e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.CREATED);
         }
     }
 
@@ -58,7 +63,7 @@ public class CategoriesController {
         try {
             return ResponseEntity.ok(genderService.updateGender(id,request));
         } catch (Exception e) {
-            return errorEntity(e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.CREATED);
         }
     }
 
@@ -67,7 +72,7 @@ public class CategoriesController {
         try {
             return ResponseEntity.ok(categoryService.getAllCategories());
         } catch (Exception e) {
-            return errorEntity(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.NO_CONTENT);
         }
     }
 
@@ -78,7 +83,7 @@ public class CategoriesController {
         try {
             return ResponseEntity.ok(categoryService.getAllCategories().stream().filter((category) -> Objects.equals(category.getGenderId(), genderId)));
         } catch (Exception e) {
-            return errorEntity(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.NO_CONTENT);
         }
     }
 
@@ -87,7 +92,27 @@ public class CategoriesController {
         try {
             return ResponseEntity.ok(genderService.getAllGenders());
         } catch (Exception e) {
-            return errorEntity(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.NO_CONTENT);
+        }
+    }
+
+
+    @PostMapping("/subcategory")
+    public ResponseEntity<?> saveSubcategory(@RequestBody SubcategoryDto request) {
+        try {
+            return ResponseEntity.ok(subcategoryService.createSubcategory(request));
+        } catch (Exception e) {
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+
+    @GetMapping("/subcategories")
+    public ResponseEntity<?> getAllSubcategories() {
+        try {
+            return ResponseEntity.ok(subcategoryService.getAllSubcategories());
+        } catch (Exception e) {
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 

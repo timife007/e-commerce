@@ -7,26 +7,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
-@Table(name = "section")
+@Table(name = "sub_category")
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Section {
+public class Subcategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String sectionName;
+    private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id")
+    @ManyToOne(targetEntity = Category.class)
+    @JoinColumn(name = "category")
     private Category category;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "section")
-    private List<SectionItem> sectionItems;
 }

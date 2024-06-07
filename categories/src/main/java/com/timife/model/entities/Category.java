@@ -1,11 +1,15 @@
 package com.timife.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,6 +28,7 @@ public class Category {
     @JoinColumn(name = "genderId")
     Gender gender;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
-    private List<Section> sectionIds;
+//    @JsonBackReference
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category", fetch = FetchType.EAGER)
+//    private List<Subcategory> subcategoryIds = new ArrayList<>();
 }

@@ -1,16 +1,18 @@
 package com.timife.model.dtos;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class SubCategoryDto {
-    String name;
-    Long genderId;
-    Long categoryId;
+@Data
+public class SubcategoryDto {
+
+//    private Long id;
+    private String name;
+    private Long categoryId;
 }

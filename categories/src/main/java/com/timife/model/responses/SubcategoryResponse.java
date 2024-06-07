@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @NoArgsConstructor
-public class SectionResponse {
+public class SubcategoryResponse {
 
     private Long id;
     private String name;

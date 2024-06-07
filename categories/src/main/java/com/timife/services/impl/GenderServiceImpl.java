@@ -4,6 +4,7 @@ import com.timife.model.dtos.GenderDto;
 import com.timife.model.entities.Category;
 import com.timife.model.entities.Gender;
 import com.timife.model.mappers.Mapper;
+import com.timife.model.responses.CategoryResponse;
 import com.timife.model.responses.GenderResponse;
 import com.timife.repositories.CategoryRepository;
 import com.timife.repositories.GenderRepository;
@@ -31,7 +32,9 @@ public class GenderServiceImpl implements GenderService {
     public List<GenderResponse> getAllGenders() {
         return genderRepository.findAll()
                 .stream()
-                .map((gender) -> GenderResponse.builder().id(gender.getId()).name(gender.getName()).categories(gender.getCategories()).build())
+                .map((gender) -> GenderResponse.builder().id(gender.getId()).name(gender.getName()).categories(gender.getCategories().stream().map((category) ->
+                        CategoryResponse.builder().id(category.getId()).genderId(gender.getId()).name(category.getName()).build()
+                ).toList()).build())
                 .toList();
     }
 
