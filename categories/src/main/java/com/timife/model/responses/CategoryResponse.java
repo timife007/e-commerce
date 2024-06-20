@@ -1,5 +1,6 @@
 package com.timife.model.responses;
 
+import com.timife.model.entities.Category;
 import com.timife.model.entities.Subcategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,5 +17,6 @@ public class CategoryResponse {
     private Long id;
     private String name;
     private Long genderId;
-    private List<Subcategory> subcategoryList;
+    private Long parentId;
+    private List<Category> subcategoryList;
 }

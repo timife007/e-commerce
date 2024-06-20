@@ -59,7 +59,7 @@ public class CategoriesController {
     }
 
     @PutMapping("/gender/{id}")
-    public ResponseEntity<?> updateGender(@PathVariable Long id,@RequestBody GenderDto request) {
+    public ResponseEntity<?> updateGender(@PathVariable("id") Long id,@RequestBody GenderDto request) {
         try {
             return ResponseEntity.ok(genderService.updateGender(id,request));
         } catch (Exception e) {

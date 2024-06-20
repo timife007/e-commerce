@@ -24,5 +24,11 @@ spring:
             - Path=/auth/**
           filters:
             - AuthenticationFilter
+        - id: categories
+          uri: lb://categories
+          predicates:
+            - Path=/product/**
+          filters:
+            - AuthenticationFilter
 server:
   port: 8088

@@ -59,6 +59,6 @@ public class GenderServiceImpl implements GenderService {
         Gender newGender = genderRepository.findById((long) genderId).orElseThrow();
         newGender.setName(genderDto.getName());
         Gender savedGender = genderRepository.save(newGender);
-        return GenderResponse.builder().id(savedGender.getId()).name(savedGender.getName()).build();
+        return GenderResponse.builder().id(genderId).name(savedGender.getName()).build();
     }
 }

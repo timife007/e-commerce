@@ -21,12 +21,21 @@ import java.util.List;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long id = null;
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "genderId")
-    Gender gender;
+    private Gender gender;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_category_id")
+    private Category parentCategory;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "parentCategory",cascade = CascadeType.ALL)
+    private List<Category> subCategories = new ArrayList<>();
+
 
 //    @JsonBackReference
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category", fetch = FetchType.EAGER)
