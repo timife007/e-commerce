@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShopItemDto {
+public class ProductItemDto {
 
     private String name;
     private String price;

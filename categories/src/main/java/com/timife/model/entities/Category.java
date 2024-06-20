@@ -36,8 +36,4 @@ public class Category {
     @OneToMany(mappedBy = "parentCategory",cascade = CascadeType.ALL)
     private List<Category> subCategories = new ArrayList<>();
 
-
-//    @JsonBackReference
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category", fetch = FetchType.EAGER)
-//    private List<Subcategory> subcategoryIds = new ArrayList<>();
 }
