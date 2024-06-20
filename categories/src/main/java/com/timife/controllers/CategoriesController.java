@@ -5,7 +5,6 @@ import com.timife.model.dtos.GenderDto;
 import com.timife.model.dtos.SubcategoryDto;
 import com.timife.services.CategoryService;
 import com.timife.services.GenderService;
-import com.timife.services.SubcategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,8 +27,6 @@ public class CategoriesController {
     @Autowired
     private final GenderService genderService;
 
-    @Autowired
-    private final SubcategoryService subcategoryService;
 
     @PostMapping("/category")
     public ResponseEntity<?> saveCategory(@RequestBody CategoryDto request) {
@@ -93,26 +90,6 @@ public class CategoriesController {
             return ResponseEntity.ok(genderService.getAllGenders());
         } catch (Exception e) {
             return errorEntity(e.getLocalizedMessage(), HttpStatus.NO_CONTENT);
-        }
-    }
-
-
-    @PostMapping("/subcategory")
-    public ResponseEntity<?> saveSubcategory(@RequestBody SubcategoryDto request) {
-        try {
-            return ResponseEntity.ok(subcategoryService.createSubcategory(request));
-        } catch (Exception e) {
-            return errorEntity(e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-
-    @GetMapping("/subcategories")
-    public ResponseEntity<?> getAllSubcategories() {
-        try {
-            return ResponseEntity.ok(subcategoryService.getAllSubcategories());
-        } catch (Exception e) {
-            return errorEntity(e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 

@@ -3,6 +3,7 @@ package com.timife.services.impl;
 import com.timife.model.entities.ProductItem;
 import com.timife.repositories.ProductItemRepository;
 import com.timife.services.ProductService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductItemRepository productItemRepository;
 
 
+    @Transactional
     @Override
     public ProductItem save(ProductItem productItem) {
 

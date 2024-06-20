@@ -1,7 +1,6 @@
 package com.timife.model.responses;
 
 import com.timife.model.entities.Category;
-import com.timife.model.entities.Subcategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

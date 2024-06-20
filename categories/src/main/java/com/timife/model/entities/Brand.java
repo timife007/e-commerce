@@ -6,15 +6,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Table(name = "product_size")
+@Table(name = "product_brand")
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
-public class ProductSize {
+public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String size;
+    private String name;
+    private String description;
 }

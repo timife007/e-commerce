@@ -6,15 +6,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Table(name = "product_image")
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Builder
-@Entity
-@Table(name = "product_colour")
-public class ProductColour {
+@Data
+public class Image {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String colour;
+    private String imageUrl;
+    private String type;
+
+    @ManyToOne
+    @JoinColumn(name = "product_item_id")
+    private ProductItem productItem;
 }

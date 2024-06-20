@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -24,15 +26,16 @@ public class ProductItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
-
     @ManyToOne
     @JoinColumn(name = "product_colour_id")
-    private ProductColour colour;
+    private Colour colour;
     private String productCode;
 
-    @ManyToOne
-    @JoinColumn(name = "product_size_id")
-    private ProductSize size;
+    @OneToOne
+    private Brand brand;
+
+    @OneToMany(mappedBy = "productItem")
+    private Set<ProductItemSize> productItemSizes;
+
     private String originalPrice;
-    private Integer qty_in_stock;
 }
