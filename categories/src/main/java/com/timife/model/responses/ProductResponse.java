@@ -2,6 +2,7 @@ package com.timife.model.responses;
 
 import com.timife.model.entities.Brand;
 import com.timife.model.entities.Image;
+import com.timife.model.entities.ProductSize;
 import com.timife.model.entities.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,4 +27,5 @@ public class ProductResponse {
     private Brand brand;
     private String colour;
     private Long categoryId;
+    private List<ProductSize> productSizes;
 }

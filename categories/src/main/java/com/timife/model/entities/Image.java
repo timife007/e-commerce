@@ -23,5 +23,6 @@ public class Image {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product = null;
+    @JsonBackReference
+    private Product product;
 }

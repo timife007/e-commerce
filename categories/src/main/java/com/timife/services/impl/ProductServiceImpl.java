@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,20 +49,20 @@ public class ProductServiceImpl implements ProductService {
 
         Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
         Product newProduct = createProduct(productRequest, category);
-        Product savedProduct = productRepository.save(newProduct);
+
         //Handle Image relationships
-        List<Image> images = productRequest.getImages().stream().map((request) ->
+        Set<Image> images = productRequest.getImages().stream().map((request) ->
                 Image.builder().imageUrl(request.getImageUrl()).type(request.getType()).build()
-        ).toList();
+        ).collect(Collectors.toSet());
+
         //Save all images.
-        savedProduct.getImages().addAll(images);
+        newProduct.setImages(images);
 
         Brand savedBrand = brandRepository.save(productRequest.getBrand());
-        savedProduct.setBrand(savedBrand);
+        newProduct.setBrand(savedBrand);
 
         Colour savedColour = colourRepository.save(Colour.builder().colour(productRequest.getColour()).build());
-//
-        savedProduct.setColour(savedColour);
+        newProduct.setColour(savedColour);
 
         //Handle product size relationships, child and parent.
         List<ProductSize> productSizes = productRequest.getProductSizeList().stream().map((request) -> {
@@ -69,14 +70,15 @@ public class ProductServiceImpl implements ProductService {
             ProductSize productSize = new ProductSize();
             productSize.setSize(size);
             productSize.setQtyInStock(request.getQtyInStock());
+//            productSize.setProduct(newProduct);
             return productSize;
         }).toList();
 
 //        log.error(productSizes.toString());
 
         //Save all product sizes.
-        savedProduct.getProductSizes().addAll(productSizes);
-        productRepository.save(savedProduct);
+        newProduct.setProductSizes(new HashSet<>(productSizes));
+        Product savedProduct = productRepository.save(newProduct);
         ProductResponse response = ProductResponse.builder()
                 .id(savedProduct.getId())
                 .name(savedProduct.getName())
@@ -87,6 +89,7 @@ public class ProductServiceImpl implements ProductService {
                 .colour(savedProduct.getColour().getColour())
                 .imageList(savedProduct.getImages().stream().toList())
                 .brand(savedProduct.getBrand())
+                .productSizes(savedProduct.getProductSizes().stream().toList())
                 .build();
         return response;
     }
