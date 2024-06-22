@@ -1,5 +1,6 @@
 package com.timife.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +23,5 @@ public class Image {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private Product product = null;
 }

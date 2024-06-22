@@ -99,7 +99,7 @@ public class CategoriesController {
         }
     }
 
-    @PostMapping()
+    @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> saveProduct(@RequestBody ProductRequest request){
         try{
             return ResponseEntity.ok(productService.saveProduct(request));
@@ -131,6 +131,25 @@ public class CategoriesController {
     public ResponseEntity<?> getAllSizes() {
         try {
             return ResponseEntity.ok(productService.getSizes());
+        } catch (Exception e) {
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("/productSize")
+    public ResponseEntity<?> getAllProductSizes() {
+        try {
+            return ResponseEntity.ok(productService.getProductSizes());
+        } catch (Exception e) {
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.NO_CONTENT);
+        }
+    }
+
+
+    @GetMapping("/images")
+    public ResponseEntity<?> getAllImages() {
+        try {
+            return ResponseEntity.ok(productService.getImages());
         } catch (Exception e) {
             return errorEntity(e.getLocalizedMessage(), HttpStatus.NO_CONTENT);
         }

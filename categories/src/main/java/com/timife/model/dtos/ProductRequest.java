@@ -1,9 +1,6 @@
 package com.timife.model.dtos;
 
 import com.timife.model.entities.Brand;
-import com.timife.model.entities.Colour;
-import com.timife.model.entities.Image;
-import com.timife.model.entities.ProductSize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +19,8 @@ public class ProductRequest {
     private Double salePrice;
     private Double originalPrice;
     private String productDescription;
-    private Colour colour;
-    private List<Image> images;
+    private String colour;
+    private List<ImageRequest> images;
     private Brand brand;
     private String productCode;
 }

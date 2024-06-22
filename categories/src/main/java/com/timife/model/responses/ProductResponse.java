@@ -18,9 +18,12 @@ public class ProductResponse {
     private Long id;
     private String name;
     private List<Image> imageList;
-    private Double price;
+    private Double salePrice;
+    private Double originalPrice;
+    private String productCode;
     private List<Size> sizes;
     private String productDetails;
     private Brand brand;
     private String colour;
+    private Long categoryId;
 }
