@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Table(name = "product_brand")
+@Table(name = "brand")
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long id = null;
     private String name;
     private String description;
 }

@@ -5,9 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.HashSet;
 import java.util.Set;
 
-@Table(name = "product_size")
+@Table(name = "size")
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,9 +17,7 @@ import java.util.Set;
 public class Size {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long id = null;
     private String size;
 
-    @OneToMany(mappedBy = "size")
-    private Set<ProductItemSize> productItemSizeList;
 }
