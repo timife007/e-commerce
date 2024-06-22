@@ -19,5 +19,4 @@ public class Size {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id = null;
     private String size;
-
 }
