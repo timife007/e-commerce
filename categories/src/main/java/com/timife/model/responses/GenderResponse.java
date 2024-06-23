@@ -18,5 +18,5 @@ public class GenderResponse {
 
     private String name;
 
-    private List<Category> categories;
+    private List<CategoryResponse> categories;
 }

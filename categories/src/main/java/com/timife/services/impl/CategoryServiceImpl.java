@@ -5,12 +5,14 @@ import com.timife.model.entities.Gender;
 import com.timife.model.dtos.CategoryDto;
 import com.timife.model.dtos.GenderDto;
 import com.timife.model.mappers.Mapper;
+import com.timife.model.responses.CategoryListResponse;
 import com.timife.model.responses.CategoryResponse;
 import com.timife.repositories.CategoryRepository;
 import com.timife.repositories.GenderRepository;
 import com.timife.services.CategoryService;
 import com.timife.utils.CustomException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
@@ -28,21 +31,29 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private final GenderRepository genderRepository;
 
-//    @Autowired
-//    private final Mapper<Category, CategoryDto> categoryDtoMapper;
-
 
     @Override
     public CategoryResponse createCategory(CategoryDto categoryDto) {
-        var savedCategory = categoryRepository.findByNameAndGenderId(categoryDto.getName(), categoryDto.getGenderId());
-        if(savedCategory == null){
+        var savedGender = genderRepository.findById(categoryDto.getGenderId()).orElseThrow();
+        var savedCategory = categoryRepository.findByNameAndGender(categoryDto.getName(), savedGender);
+
+        if (savedCategory == null) {
             Gender gender = genderRepository.findById(categoryDto.getGenderId()).orElseThrow();
             Category newCategory = Category.builder().name(categoryDto.getName()).gender(gender).build();
-            gender.getCategories().add(newCategory);
-            genderRepository.save(gender);
-            var category = categoryRepository.findByNameAndGenderId(categoryDto.getName(), categoryDto.getGenderId());
-            return CategoryResponse.builder().id(category.getId()).name(category.getName()).genderId(category.getGender().getId()).build();
-        }else{
+            log.error(newCategory.getName());
+            if (categoryDto.getParentId() == null) {
+                gender.getCategories().add(newCategory);
+                genderRepository.save(gender);
+            } else {
+                log.error("This line is evoked");
+                Category parentCategory = categoryRepository.findById(categoryDto.getParentId()).orElseThrow();
+                newCategory.setParentCategory(parentCategory);
+                Category saveCategory = categoryRepository.save(newCategory);
+                return CategoryResponse.builder().id(saveCategory.getId()).name(saveCategory.getName()).parentId(parentCategory.getId()).genderId(saveCategory.getGender().getId()).build();
+            }
+            var category = categoryRepository.findByNameAndGender(categoryDto.getName(), gender);
+            return CategoryResponse.builder().id(category.getId()).genderId(category.getGender().getId()).name(category.getName()).build();
+        } else {
             throw new IllegalArgumentException("Category already present");
         }
     }
@@ -62,11 +73,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryResponse> getAllCategories() {
+    public List<CategoryListResponse> getAllCategories() {
         return categoryRepository
-                .findAll()
-                .stream()
-                .map((category) -> CategoryResponse.builder().id(category.getId()).name(category.getName()).genderId(category.getGender().getId()).build())
-                .toList();
+                .findAll().stream().map((category) -> {
+                    Long parentId = category.getParentCategory() != null ? category.getParentCategory().getId() : null;
+                    return CategoryListResponse.builder().id(category.getId()).name(category.getName()).genderId(category.getGender().getId()).parentId(parentId).build();
+                }).toList();
     }
 }
