@@ -30,6 +30,7 @@ public class Product {
     private String productCode;
     private Double originalPrice;
     private String productDescription;
+    private String lookAfterMe;
 
     @ManyToOne
     @JoinColumn(name = "colour_id")

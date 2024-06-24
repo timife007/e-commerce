@@ -59,24 +59,21 @@ public class ProductServiceImpl implements ProductService {
 
         Colour savedColour = colourRepository.save(Colour.builder().colour(productRequest.getColour()).build());
         newProduct.setColour(savedColour);
-        Product savedProduct = productRepository.save(newProduct);
 
 
         //Handle product size relationships, child and parent.
-        Set<ProductSize> productSizes = productRequest.getProductSizeList().stream().map((request) -> {
+        List<ProductSize> productSizes = productRequest.getProductSizeList().stream().map((request) -> {
             Size size = sizeRepository.findById(request.getSizeId()).orElseThrow(() -> new RuntimeException("Size not found"));
             ProductSize productSize = new ProductSize();
             productSize.setSize(size);
             productSize.setQtyInStock(request.getQtyInStock());
-            productSize.setProduct(savedProduct);
+            productSize.setProduct(newProduct);
             return productSize;
-        }).collect(Collectors.toSet());
+        }).toList();
 
         //Save all product sizes
-        List<ProductSize> savedProductSizes = productSizeRepository.saveAll(productSizes);
-        //set on product.
-        savedProduct.setProductSizes(savedProductSizes);
-        productRepository.save(savedProduct);
+        newProduct.getProductSizes().addAll(productSizes);
+        Product savedProduct = productRepository.save(newProduct);
         ProductResponse response = ProductResponse.builder()
                 .id(savedProduct.getId())
                 .name(savedProduct.getName())
@@ -88,6 +85,8 @@ public class ProductServiceImpl implements ProductService {
                 .imageList(savedProduct.getImages().stream().toList())
                 .brand(savedProduct.getBrand())
                 .productSizes(savedProduct.getProductSizes().stream().toList())
+                .originalPrice(savedProduct.getOriginalPrice())
+                .lookAfterMe(savedProduct.getLookAfterMe())
                 .build();
         return response;
     }
