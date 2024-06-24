@@ -11,10 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +40,6 @@ public class ProductServiceImpl implements ProductService {
     private BrandRepository brandRepository;
 
 
-    @Transactional
     @Override
     public ProductResponse saveProduct(ProductRequest productRequest) {
 
@@ -63,22 +59,24 @@ public class ProductServiceImpl implements ProductService {
 
         Colour savedColour = colourRepository.save(Colour.builder().colour(productRequest.getColour()).build());
         newProduct.setColour(savedColour);
+        Product savedProduct = productRepository.save(newProduct);
+
 
         //Handle product size relationships, child and parent.
-        List<ProductSize> productSizes = productRequest.getProductSizeList().stream().map((request) -> {
+        Set<ProductSize> productSizes = productRequest.getProductSizeList().stream().map((request) -> {
             Size size = sizeRepository.findById(request.getSizeId()).orElseThrow(() -> new RuntimeException("Size not found"));
             ProductSize productSize = new ProductSize();
             productSize.setSize(size);
             productSize.setQtyInStock(request.getQtyInStock());
-//            productSize.setProduct(newProduct);
+            productSize.setProduct(savedProduct);
             return productSize;
-        }).toList();
+        }).collect(Collectors.toSet());
 
-//        log.error(productSizes.toString());
-
-        //Save all product sizes.
-        newProduct.setProductSizes(new HashSet<>(productSizes));
-        Product savedProduct = productRepository.save(newProduct);
+        //Save all product sizes
+        List<ProductSize> savedProductSizes = productSizeRepository.saveAll(productSizes);
+        //set on product.
+        savedProduct.setProductSizes(savedProductSizes);
+        productRepository.save(savedProduct);
         ProductResponse response = ProductResponse.builder()
                 .id(savedProduct.getId())
                 .name(savedProduct.getName())
@@ -117,6 +115,21 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Image> getImages() {
         return imageRepository.findAll();
+    }
+
+    @Override
+    public List<ProductSize> getSpecificProductSizeQty(Long id) {
+        return productSizeRepository.findAll().stream().filter((item) -> Objects.equals(item.getProduct().getId(), id)).toList();
+    }
+
+    @Override
+    public void deleteProduct(Long id){
+        productRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Image> getSpecificImages(Long productId) {
+        return productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found")).getImages().stream().toList();
     }
 
     private static Product createProduct(ProductRequest productRequest, Category category) {

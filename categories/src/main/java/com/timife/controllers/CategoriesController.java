@@ -136,7 +136,7 @@ public class CategoriesController {
         }
     }
 
-    @GetMapping("/productSize")
+    @GetMapping("/productSizes")
     public ResponseEntity<?> getAllProductSizes() {
         try {
             return ResponseEntity.ok(productService.getProductSizes());
@@ -150,6 +150,34 @@ public class CategoriesController {
     public ResponseEntity<?> getAllImages() {
         try {
             return ResponseEntity.ok(productService.getImages());
+        } catch (Exception e) {
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("/images/{productId}")
+    public ResponseEntity<?> getSpecificImages(@PathVariable("productId") Long productId) {
+        try {
+            return ResponseEntity.ok(productService.getSpecificImages(productId));
+        } catch (Exception e) {
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteSpecificProduct(@PathVariable("id") Long productId) {
+        try {
+            productService.deleteProduct(productId);
+            return ResponseEntity.ok("Product deleted");
+        } catch (Exception e) {
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/productSizes/{id}")
+    public ResponseEntity<?> getSpecificProductSizes(@PathVariable("id") Long productId) {
+        try {
+            return ResponseEntity.ok(productService.getSpecificProductSizeQty(productId));
         } catch (Exception e) {
             return errorEntity(e.getLocalizedMessage(), HttpStatus.NO_CONTENT);
         }

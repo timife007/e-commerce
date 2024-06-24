@@ -22,4 +22,10 @@ public interface ProductService {
     public List<ProductSize> getProductSizes();
 
     public List<Image> getImages();
+
+    public List<ProductSize> getSpecificProductSizeQty(Long id);
+
+    public List<Image> getSpecificImages(Long productId);
+
+    public void deleteProduct(Long id);
 }
