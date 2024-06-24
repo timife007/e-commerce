@@ -28,7 +28,5 @@ spring:
           uri: lb://categories
           predicates:
             - Path=/product/**
-          filters:
-            - AuthenticationFilter
 server:
   port: 8088

@@ -39,7 +39,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             Boolean check = routeValidator.isSecured.test(exchange.getRequest());
             log.error(check + " code was triggered");
 
-            if (check) {
+            if (!check) {
                 //header contains token or not;
                 if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                     throw new RuntimeException("missing auth header");

@@ -17,8 +17,9 @@ public class RouteValidator {
     );
 
 
+    //returns true if none of the openApiEndpoints matches the sent api request.
     public Predicate<ServerHttpRequest> isSecured =
             request -> openApiEndpoints
                     .stream()
-                    .noneMatch(uri -> request.getURI().getPath().contains(uri));
+                    .anyMatch(uri -> request.getURI().getPath().contains(uri));
 }

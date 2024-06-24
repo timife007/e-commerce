@@ -22,5 +22,6 @@ public class ProductRequest {
     private String colour;
     private List<ImageRequest> images;
     private Brand brand;
+    private String lookAfterMe;
     private String productCode;
 }
