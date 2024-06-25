@@ -1,6 +1,7 @@
 package com.timife.services;
 
 import com.timife.model.dtos.ProductRequest;
+import com.timife.model.dtos.SelectOrderDto;
 import com.timife.model.entities.Image;
 import com.timife.model.entities.Product;
 import com.timife.model.entities.ProductSize;
@@ -28,4 +29,6 @@ public interface ProductService {
     public List<Image> getSpecificImages(Long productId);
 
     public void deleteProduct(Long id);
+
+    public ProductSize selectOrderRequest(SelectOrderDto selectOrderDto);
 }

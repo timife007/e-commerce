@@ -183,4 +183,14 @@ public class CategoriesController {
         }
     }
 
+
+    @PostMapping("/productSize")
+    public ResponseEntity<?> selectOrderByProductSize(@RequestBody SelectOrderDto selectOrderDto) {
+        try {
+            return ResponseEntity.ok(productService.selectOrderRequest(selectOrderDto));
+        } catch (Exception e) {
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.NO_CONTENT);
+        }
+    }
+
 }

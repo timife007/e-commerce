@@ -1,6 +1,7 @@
 package com.timife.services.impl;
 
 import com.timife.model.dtos.ProductRequest;
+import com.timife.model.dtos.SelectOrderDto;
 import com.timife.model.entities.*;
 import com.timife.model.responses.ProductResponse;
 import com.timife.repositories.*;
@@ -122,8 +123,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(Long id){
+    public void deleteProduct(Long id) {
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public ProductSize selectOrderRequest(SelectOrderDto selectOrderDto) {
+        return productSizeRepository.findByProductIdAndSizeId(selectOrderDto.getProductId(), selectOrderDto.getSizeId()).orElseThrow(
+                () -> new RuntimeException("Product Item with size id " + selectOrderDto.getSizeId() + "and product id " + selectOrderDto.getProductId() + "not found")
+        );
     }
 
     @Override
