@@ -4,6 +4,7 @@ import com.timife.model.dtos.ProductRequest;
 import com.timife.model.dtos.SelectOrderDto;
 import com.timife.model.entities.*;
 import com.timife.model.responses.ProductResponse;
+import com.timife.model.responses.ProductSizeResponse;
 import com.timife.repositories.*;
 import com.timife.services.ProductService;
 import jakarta.transaction.Transactional;
@@ -120,8 +121,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductSize> getSpecificProductSizeQty(Long id) {
-        return productSizeRepository.findAll().stream().filter((item) -> Objects.equals(item.getProduct().getId(), id)).toList();
+    public List<ProductSizeResponse> getSpecificProductSizeQty(Long id) {
+        return productSizeRepository.findAll().stream().filter((item) -> Objects.equals(item.getProduct().getId(), id)).map((productSize) ->
+                ProductSizeResponse.builder().sizeId(productSize.getId()).qtyInStock(productSize.getQtyInStock()).id(productSize.getId()).price(productSize.getProduct().getSalePrice()).build()
+        ).toList();
     }
 
     @Override
@@ -130,10 +133,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductSize selectOrderRequest(SelectOrderDto selectOrderDto) {
-        return productSizeRepository.findByProductIdAndSizeId(selectOrderDto.getProductId(), selectOrderDto.getSizeId()).orElseThrow(
+    public ProductSizeResponse selectOrderRequest(SelectOrderDto selectOrderDto) {
+        ProductSize productSize = productSizeRepository.findByProductIdAndSizeId(selectOrderDto.getProductId(), selectOrderDto.getSizeId()).orElseThrow(
                 () -> new RuntimeException("Product Item with size id " + selectOrderDto.getSizeId() + "and product id " + selectOrderDto.getProductId() + "not found")
         );
+        return ProductSizeResponse.builder()
+                .sizeId(productSize.getId())
+                .qtyInStock(productSize.getQtyInStock())
+                .id(productSize.getId())
+                .price(productSize.getProduct()
+                        .getSalePrice()).build();
     }
 
     @Override

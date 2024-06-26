@@ -16,10 +16,20 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    @PostMapping("/productSize")
-    public ResponseEntity<?> selectOrder( @RequestBody OrderItemDto orderItemDto) {
+    @PostMapping("/select")
+    public ResponseEntity<?> selectOrder(@RequestBody OrderItemDto orderItemDto) {
         try {
             return ResponseEntity.ok(cartService.selectOrder(orderItemDto));
+        } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+    }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserCart( @PathVariable("id") Long userId) {
+        try {
+            return ResponseEntity.ok(cartService.findCartById(userId));
         } catch (Exception e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }

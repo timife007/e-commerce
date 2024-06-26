@@ -1,7 +1,9 @@
 package com.timife.controllers;
 
 import com.timife.model.dtos.*;
+import com.timife.model.entities.ProductSize;
 import com.timife.model.entities.Size;
+import com.timife.model.responses.ProductSizeResponse;
 import com.timife.services.CategoryService;
 import com.timife.services.GenderService;
 import com.timife.services.ProductService;
@@ -62,9 +64,9 @@ public class CategoriesController {
     }
 
     @PutMapping("/gender/{id}")
-    public ResponseEntity<?> updateGender(@PathVariable("id") Long id,@RequestBody GenderDto request) {
+    public ResponseEntity<?> updateGender(@PathVariable("id") Long id, @RequestBody GenderDto request) {
         try {
-            return ResponseEntity.ok(genderService.updateGender(id,request));
+            return ResponseEntity.ok(genderService.updateGender(id, request));
         } catch (Exception e) {
             return errorEntity(e.getLocalizedMessage(), HttpStatus.CREATED);
         }
@@ -100,20 +102,20 @@ public class CategoriesController {
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> saveProduct(@RequestBody ProductRequest request){
-        try{
+    public ResponseEntity<?> saveProduct(@RequestBody ProductRequest request) {
+        try {
             return ResponseEntity.ok(productService.saveProduct(request));
-        }catch (Exception e){
+        } catch (Exception e) {
             return errorEntity(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/size")
-    public ResponseEntity<?> saveSize(@RequestBody List<Size> sizes){
-        try{
+    public ResponseEntity<?> saveSize(@RequestBody List<Size> sizes) {
+        try {
             log.error(sizes.toString());
             return ResponseEntity.ok(productService.saveSize(sizes));
-        }catch (Exception e){
+        } catch (Exception e) {
             return errorEntity(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -194,12 +196,8 @@ public class CategoriesController {
 
 
     @PostMapping("/productSize")
-    public ResponseEntity<?> selectOrderByProductSize(@RequestBody SelectOrderDto selectOrderDto) {
-        try {
-            return ResponseEntity.ok(productService.selectOrderRequest(selectOrderDto));
-        } catch (Exception e) {
-            return errorEntity(e.getLocalizedMessage(), HttpStatus.NO_CONTENT);
-        }
+    public ResponseEntity<ProductSizeResponse> selectOrderByProductSize(@RequestBody SelectOrderDto selectOrderDto) {
+        return ResponseEntity.ok(productService.selectOrderRequest(selectOrderDto));
     }
 
 }

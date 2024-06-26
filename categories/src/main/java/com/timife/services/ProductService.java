@@ -7,6 +7,7 @@ import com.timife.model.entities.Product;
 import com.timife.model.entities.ProductSize;
 import com.timife.model.entities.Size;
 import com.timife.model.responses.ProductResponse;
+import com.timife.model.responses.ProductSizeResponse;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public interface ProductService {
 
     public List<Image> getImages();
 
-    public List<ProductSize> getSpecificProductSizeQty(Long id);
+    public List<ProductSizeResponse> getSpecificProductSizeQty(Long id);
 
     public List<Image> getSpecificImages(Long productId);
 
@@ -32,5 +33,5 @@ public interface ProductService {
 
     public void deleteProduct(Long id);
 
-    public ProductSize selectOrderRequest(SelectOrderDto selectOrderDto);
+    public ProductSizeResponse selectOrderRequest(SelectOrderDto selectOrderDto);
 }

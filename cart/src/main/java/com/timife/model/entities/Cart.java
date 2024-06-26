@@ -1,11 +1,13 @@
 package com.timife.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,16 +15,16 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user_order")
-public class Order {
+@Table(name = "user_cart")
+public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private Long userId;
     private Double subTotal;
-    private Double sumTotal;
+    private Double sumTotal = 0.0;
 
-    @OneToMany
-    List<OrderItem> orderItems;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    List<OrderItem> orderItems = new ArrayList<>();
 }
