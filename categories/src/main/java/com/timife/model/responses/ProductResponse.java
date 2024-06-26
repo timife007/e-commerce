@@ -30,3 +30,5 @@ public class ProductResponse {
     private String lookAfterMe;
     private List<ProductSize> productSizes;
 }
+
+

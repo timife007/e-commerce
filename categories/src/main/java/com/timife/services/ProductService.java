@@ -28,6 +28,8 @@ public interface ProductService {
 
     public List<Image> getSpecificImages(Long productId);
 
+    public ProductResponse getProduct(Long id);
+
     public void deleteProduct(Long id);
 
     public ProductSize selectOrderRequest(SelectOrderDto selectOrderDto);

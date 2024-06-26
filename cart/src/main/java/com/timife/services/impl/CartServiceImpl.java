@@ -25,7 +25,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public String selectOrder(OrderItemDto orderItemDto) {
         ResponseEntity<?> productSize = productsFeignClient.selectOrderByProductSize(orderItemDto);
-        log.debug(productSize.toString());
-        return productSize.toString();
+        log.debug(productSize.getStatusCode().toString());
+        return productSize.getBody().toString();
     }
 }

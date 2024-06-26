@@ -164,6 +164,15 @@ public class CategoriesController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getProduct(@PathVariable("id") Long productId) {
+        try {
+            return ResponseEntity.ok(productService.getProduct(productId));
+        } catch (Exception e) {
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.NO_CONTENT);
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSpecificProduct(@PathVariable("id") Long productId) {
         try {

@@ -82,6 +82,8 @@ public class ProductServiceImpl implements ProductService {
                 .productCode(savedProduct.getProductCode())
                 .productDetails(savedProduct.getProductDescription())
                 .categoryId(category.getId())
+                .sizes(savedProduct.getProductSizes().stream().map((productSize) -> Size.builder().size(productSize.getSize().getSize()).id(productSize.getSize().getId()).build()
+                ).toList())
                 .colour(savedProduct.getColour().getColour())
                 .imageList(savedProduct.getImages().stream().toList())
                 .brand(savedProduct.getBrand())
@@ -137,6 +139,28 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Image> getSpecificImages(Long productId) {
         return productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found")).getImages().stream().toList();
+    }
+
+    @Override
+    public ProductResponse getProduct(Long id) {
+        Product savedProduct = productRepository.findById(id).orElseThrow(() -> new RuntimeException("product not found"));
+
+        return ProductResponse.builder()
+                .id(savedProduct.getId())
+                .name(savedProduct.getName())
+                .salePrice(savedProduct.getSalePrice())
+                .productCode(savedProduct.getProductCode())
+                .productDetails(savedProduct.getProductDescription())
+                .categoryId(savedProduct.getCategory().getId())
+                .sizes(savedProduct.getProductSizes().stream().map((productSize) -> Size.builder().size(productSize.getSize().getSize()).id(productSize.getSize().getId()).build()
+                ).toList())
+                .colour(savedProduct.getColour().getColour())
+                .imageList(savedProduct.getImages().stream().toList())
+                .brand(savedProduct.getBrand())
+                .productSizes(savedProduct.getProductSizes().stream().toList())
+                .originalPrice(savedProduct.getOriginalPrice())
+                .lookAfterMe(savedProduct.getLookAfterMe())
+                .build();
     }
 
     private static Product createProduct(ProductRequest productRequest, Category category) {
