@@ -23,6 +23,7 @@ public class OrderItem {
     private Long sizeId;
     private Integer qty;
     private Double totalPrice;
+    private Double unitPrice;
 
     @ManyToOne
     @JoinColumn

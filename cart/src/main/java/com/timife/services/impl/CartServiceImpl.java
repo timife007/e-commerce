@@ -2,6 +2,7 @@ package com.timife.services.impl;
 
 import com.timife.feign.ProductsFeignClient;
 import com.timife.model.dtos.OrderItemDto;
+import com.timife.model.dtos.UpdateOrderItemDto;
 import com.timife.model.entities.Cart;
 import com.timife.model.entities.OrderItem;
 import com.timife.model.responses.ProductSizeResponse;
@@ -40,19 +41,19 @@ public class CartServiceImpl implements CartService {
         if(presentCart != null){
             Double currentTotal = presentCart.getSumTotal();
             if (orderItem != null) {
-                orderItem.setQty(orderItem.getQty() + orderItemDto.getQty());
+                orderItem.setQty(orderItem.getQty() + 1);
                 orderItem.setTotalPrice(orderItem.getTotalPrice() + productSize.getPrice());
-//                presentCart.getOrderItems().add(orderItem);
                 presentCart.setSumTotal(currentTotal + productSize.getPrice());
                 cartRepository.save(presentCart);
                 return orderItemRepository.save(orderItem);
             }
             OrderItem newOrderItem = OrderItem.builder()
                     .productId(orderItemDto.getProductId())
-                    .qty(orderItemDto.getQty())
+                    .qty(1)
                     .productSizeId(productSize.getId())
                     .sizeId(orderItemDto.getSizeId())
-                    .totalPrice(orderItemDto.getQty() * productSize.getPrice())
+                    .totalPrice(productSize.getPrice())
+                    .unitPrice(productSize.getPrice())
                     .cart(presentCart)
                     .build();
             presentCart.getOrderItems().add(newOrderItem);
@@ -64,10 +65,11 @@ public class CartServiceImpl implements CartService {
         newCart.setUserId(orderItemDto.getUserId());
         OrderItem newOrderItem = OrderItem.builder()
                 .productId(orderItemDto.getProductId())
-                .qty(orderItemDto.getQty())
+                .qty(1)
                 .productSizeId(productSize.getId())
                 .sizeId(orderItemDto.getSizeId())
-                .totalPrice(orderItemDto.getQty() * productSize.getPrice())
+                .totalPrice(productSize.getPrice())
+                .unitPrice(productSize.getPrice())
                 .cart(newCart)
                 .build();
         newCart.getOrderItems().add(newOrderItem);
@@ -83,5 +85,14 @@ public class CartServiceImpl implements CartService {
         } catch (Exception e) {
             throw new RuntimeException("Cart with specified user not found");
         }
+    }
+
+    @Override
+    public OrderItem updateOrder(UpdateOrderItemDto updateOrderItemDto) {
+        OrderItem orderItem = orderItemRepository.findById(updateOrderItemDto.getOrderItemId()).orElseThrow();
+        orderItem.setQty(updateOrderItemDto.getQty());
+        orderItem.setTotalPrice(orderItem.getUnitPrice() * updateOrderItemDto.getQty());
+        orderItemRepository.save(orderItem);
+        return orderItemRepository.save(orderItem);
     }
 }
