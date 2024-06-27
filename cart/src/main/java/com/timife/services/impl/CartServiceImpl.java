@@ -57,7 +57,7 @@ public class CartServiceImpl implements CartService {
                     .cart(presentCart)
                     .build();
             presentCart.getOrderItems().add(newOrderItem);
-            presentCart.setSumTotal(currentTotal + newOrderItem.getTotalPrice());
+//            presentCart.setSumTotal(currentTotal + newOrderItem.getTotalPrice());
             cartRepository.save(presentCart);
             return orderItemRepository.save(newOrderItem);
         }
