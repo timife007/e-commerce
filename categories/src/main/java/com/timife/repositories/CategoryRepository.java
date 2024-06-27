@@ -13,9 +13,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Category findByNameAndGender(String name, Gender gender);
 
-    @Query(value = "SELECT u FROM Category u where u.gender.id = ?1")
+//    @Query(value = "SELECT u FROM Category u where u.gender.id = ?1")
     Optional<List<Category>> findByGenderId(Long genderId);
 
-    @Query(value = "SELECT u FROM Category u where u.parentCategory.id = ?1")
-    Optional<List<Category>> findByParentId(Long categoryId);
+//    @Query(value = "SELECT u FROM Category u where u.parentCategory.id = ?1")
+    Optional<List<Category>> findByParentCategoryId(Long categoryId);
 }

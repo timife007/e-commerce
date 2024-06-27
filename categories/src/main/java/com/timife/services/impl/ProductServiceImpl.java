@@ -1,8 +1,10 @@
 package com.timife.services.impl;
 
 import com.timife.model.dtos.ProductRequest;
+import com.timife.model.dtos.SelectOrderDto;
 import com.timife.model.entities.*;
 import com.timife.model.responses.ProductResponse;
+import com.timife.model.responses.ProductSizeResponse;
 import com.timife.repositories.*;
 import com.timife.services.ProductService;
 import jakarta.transaction.Transactional;
@@ -11,10 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +42,6 @@ public class ProductServiceImpl implements ProductService {
     private BrandRepository brandRepository;
 
 
-    @Transactional
     @Override
     public ProductResponse saveProduct(ProductRequest productRequest) {
 
@@ -64,20 +62,19 @@ public class ProductServiceImpl implements ProductService {
         Colour savedColour = colourRepository.save(Colour.builder().colour(productRequest.getColour()).build());
         newProduct.setColour(savedColour);
 
+
         //Handle product size relationships, child and parent.
         List<ProductSize> productSizes = productRequest.getProductSizeList().stream().map((request) -> {
             Size size = sizeRepository.findById(request.getSizeId()).orElseThrow(() -> new RuntimeException("Size not found"));
             ProductSize productSize = new ProductSize();
             productSize.setSize(size);
             productSize.setQtyInStock(request.getQtyInStock());
-//            productSize.setProduct(newProduct);
+            productSize.setProduct(newProduct);
             return productSize;
         }).toList();
 
-//        log.error(productSizes.toString());
-
-        //Save all product sizes.
-        newProduct.setProductSizes(new HashSet<>(productSizes));
+        //Save all product sizes
+        newProduct.getProductSizes().addAll(productSizes);
         Product savedProduct = productRepository.save(newProduct);
         ProductResponse response = ProductResponse.builder()
                 .id(savedProduct.getId())
@@ -86,10 +83,14 @@ public class ProductServiceImpl implements ProductService {
                 .productCode(savedProduct.getProductCode())
                 .productDetails(savedProduct.getProductDescription())
                 .categoryId(category.getId())
+                .sizes(savedProduct.getProductSizes().stream().map((productSize) -> Size.builder().size(productSize.getSize().getSize()).id(productSize.getSize().getId()).build()
+                ).toList())
                 .colour(savedProduct.getColour().getColour())
                 .imageList(savedProduct.getImages().stream().toList())
                 .brand(savedProduct.getBrand())
                 .productSizes(savedProduct.getProductSizes().stream().toList())
+                .originalPrice(savedProduct.getOriginalPrice())
+                .lookAfterMe(savedProduct.getLookAfterMe())
                 .build();
         return response;
     }
@@ -117,6 +118,58 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Image> getImages() {
         return imageRepository.findAll();
+    }
+
+    @Override
+    public List<ProductSizeResponse> getSpecificProductSizeQty(Long id) {
+        return productSizeRepository.findAll().stream().filter((item) -> Objects.equals(item.getProduct().getId(), id)).map((productSize) ->
+                ProductSizeResponse.builder().sizeId(productSize.getId()).qtyInStock(productSize.getQtyInStock()).id(productSize.getId()).price(productSize.getProduct().getSalePrice()).build()
+        ).toList();
+    }
+
+    @Override
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
+
+    @Override
+    public ProductSizeResponse selectOrderRequest(SelectOrderDto selectOrderDto) {
+        ProductSize productSize = productSizeRepository.findByProductIdAndSizeId(selectOrderDto.getProductId(), selectOrderDto.getSizeId()).orElseThrow(
+                () -> new RuntimeException("Product Item with size id " + selectOrderDto.getSizeId() + "and product id " + selectOrderDto.getProductId() + "not found")
+        );
+        return ProductSizeResponse.builder()
+                .sizeId(productSize.getId())
+                .qtyInStock(productSize.getQtyInStock())
+                .id(productSize.getId())
+                .price(productSize.getProduct()
+                        .getSalePrice()).build();
+    }
+
+    @Override
+    public List<Image> getSpecificImages(Long productId) {
+        return productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found")).getImages().stream().toList();
+    }
+
+    @Override
+    public ProductResponse getProduct(Long id) {
+        Product savedProduct = productRepository.findById(id).orElseThrow(() -> new RuntimeException("product not found"));
+
+        return ProductResponse.builder()
+                .id(savedProduct.getId())
+                .name(savedProduct.getName())
+                .salePrice(savedProduct.getSalePrice())
+                .productCode(savedProduct.getProductCode())
+                .productDetails(savedProduct.getProductDescription())
+                .categoryId(savedProduct.getCategory().getId())
+                .sizes(savedProduct.getProductSizes().stream().map((productSize) -> Size.builder().size(productSize.getSize().getSize()).id(productSize.getSize().getId()).build()
+                ).toList())
+                .colour(savedProduct.getColour().getColour())
+                .imageList(savedProduct.getImages().stream().toList())
+                .brand(savedProduct.getBrand())
+                .productSizes(savedProduct.getProductSizes().stream().toList())
+                .originalPrice(savedProduct.getOriginalPrice())
+                .lookAfterMe(savedProduct.getLookAfterMe())
+                .build();
     }
 
     private static Product createProduct(ProductRequest productRequest, Category category) {

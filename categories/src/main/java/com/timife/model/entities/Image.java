@@ -20,9 +20,4 @@ public class Image {
     private Long id = null;
     private String imageUrl;
     private String type;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    @JsonBackReference
-    private Product product;
 }

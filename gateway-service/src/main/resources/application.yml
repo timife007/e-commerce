@@ -28,7 +28,9 @@ spring:
           uri: lb://categories
           predicates:
             - Path=/product/**
-          filters:
-            - AuthenticationFilter
+        - id: cart
+          uri: lb://cart
+          predicates:
+            - Path=/cart/**
 server:
   port: 8088

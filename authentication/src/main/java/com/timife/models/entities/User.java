@@ -33,6 +33,9 @@ public class User implements UserDetails {
     private Role role;
     private String dateOfBirth;
 
+    @OneToMany
+    private List<Address> deliveryAddresses;
+
 
     private String password;
     @Enumerated(EnumType.STRING)
@@ -53,6 +56,7 @@ public class User implements UserDetails {
     public String getPassword() { //Optional, overrides the password by default if name is password, else, mandatory to override this.
         return password;
     }
+
 
     @Override
     public boolean isAccountNonExpired() {

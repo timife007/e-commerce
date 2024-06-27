@@ -1,0 +1,29 @@
+server:
+  port: 8086
+
+spring:
+  docker:
+    compose:
+      file: ./cart/docker-compose.yml
+#  profiles:
+#    active: production
+  datasource:
+    url: jdbc:postgresql://localhost:5435/ecommerce-cart
+    password: secret
+    username: timife
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+  application:
+    name: cart
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
+#    fetch-registry: true
+#    register-with-eureka: true

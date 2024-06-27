@@ -27,5 +27,8 @@ public class ProductResponse {
     private Brand brand;
     private String colour;
     private Long categoryId;
+    private String lookAfterMe;
     private List<ProductSize> productSizes;
 }
+
+
