@@ -33,7 +33,7 @@ public class CartServiceImpl implements CartService {
     private ProductsFeignClient productsFeignClient;
 
     @Override
-    public OrderItem selectOrder(OrderItemDto orderItemDto) {
+    public Cart selectOrder(OrderItemDto orderItemDto) {
 
         ProductSizeResponse productSize = productsFeignClient.selectOrderByProductSize(orderItemDto).getBody();
         OrderItem orderItem = orderItemRepository.findByCartUserIdAndProductSizeId(orderItemDto.getUserId(), productSize.getId());
@@ -44,8 +44,9 @@ public class CartServiceImpl implements CartService {
                 orderItem.setQty(orderItem.getQty() + 1);
                 orderItem.setTotalPrice(orderItem.getTotalPrice() + productSize.getPrice());
                 presentCart.setSumTotal(currentTotal + productSize.getPrice());
-                cartRepository.save(presentCart);
-                return orderItemRepository.save(orderItem);
+//                cartRepository.save(presentCart);
+                presentCart.getOrderItems().add(orderItem);
+                return cartRepository.save(presentCart);
             }
             OrderItem newOrderItem = OrderItem.builder()
                     .productId(orderItemDto.getProductId())
@@ -57,9 +58,8 @@ public class CartServiceImpl implements CartService {
                     .cart(presentCart)
                     .build();
             presentCart.getOrderItems().add(newOrderItem);
-//            presentCart.setSumTotal(currentTotal + newOrderItem.getTotalPrice());
-            cartRepository.save(presentCart);
-            return orderItemRepository.save(newOrderItem);
+            presentCart.setSumTotal(currentTotal + newOrderItem.getTotalPrice());
+            return cartRepository.save(presentCart);
         }
         Cart newCart = new Cart();
         newCart.setUserId(orderItemDto.getUserId());
@@ -74,8 +74,7 @@ public class CartServiceImpl implements CartService {
                 .build();
         newCart.getOrderItems().add(newOrderItem);
         newCart.setSumTotal(0.0 + newOrderItem.getTotalPrice());
-        cartRepository.save(newCart);
-        return orderItemRepository.save(newOrderItem);
+        return cartRepository.save(newCart);
     }
 
     @Override
@@ -88,11 +87,14 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public OrderItem updateOrder(UpdateOrderItemDto updateOrderItemDto) {
+    public Cart updateOrder(UpdateOrderItemDto updateOrderItemDto) {
         OrderItem orderItem = orderItemRepository.findById(updateOrderItemDto.getOrderItemId()).orElseThrow();
         orderItem.setQty(updateOrderItemDto.getQty());
         orderItem.setTotalPrice(orderItem.getUnitPrice() * updateOrderItemDto.getQty());
+//        orderItemRepository.save(orderItem);
         orderItemRepository.save(orderItem);
-        return orderItemRepository.save(orderItem);
+        Cart cart = orderItem.getCart();
+        cart.setSumTotal(cart.getOrderItems().stream().mapToDouble(OrderItem::getTotalPrice).sum());
+        return cartRepository.save(cart) ;
     }
 }

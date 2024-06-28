@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user_cart")
-public class Cart {
+public class  Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +28,9 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     List<OrderItem> orderItems = new ArrayList<>();
 
-    public void updateTotalPrice() {
-        this.sumTotal = orderItems.stream()
-                .mapToDouble(OrderItem::getTotalPrice)
-                .sum();
-    }
+//    public void updateTotalPrice() {
+//        this.sumTotal = orderItems.stream()
+//                .mapToDouble(OrderItem::getTotalPrice)
+//                .sum();
+//    }
 }

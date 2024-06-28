@@ -9,7 +9,7 @@ public class CartTotalListener {
     public void preUpdate(OrderItem orderItem) {
         Cart cart = orderItem.getCart();
         if (cart != null) {
-            cart.updateTotalPrice();
+//            cart.updateTotalPrice();
         }
     }
 }

@@ -31,22 +31,22 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="analytics" options="-parameters" />
-      <module name="authentication" options="-parameters" />
+      <module name="analytics" options="" />
+      <module name="authentication" options="" />
       <module name="cart" options="-parameters" />
-      <module name="catalog" options="-parameters" />
-      <module name="categories" options="-parameters" />
+      <module name="catalog" options="" />
+      <module name="categories" options="" />
       <module name="category" options="" />
-      <module name="content-management" options="-parameters" />
-      <module name="eureka-server" options="-parameters" />
-      <module name="gateway-service" options="-parameters" />
-      <module name="inventory" options="-parameters" />
-      <module name="notification" options="-parameters" />
-      <module name="order-management" options="-parameters" />
-      <module name="payment" options="-parameters" />
-      <module name="profiles" options="-parameters" />
-      <module name="reviews" options="-parameters" />
-      <module name="search" options="-parameters" />
+      <module name="content-management" options="" />
+      <module name="eureka-server" options="" />
+      <module name="gateway-service" options="" />
+      <module name="inventory" options="" />
+      <module name="notification" options="" />
+      <module name="order-management" options="" />
+      <module name="payment" options="" />
+      <module name="profiles" options="" />
+      <module name="reviews" options="" />
+      <module name="search" options="" />
     </option>
   </component>
 </project>
