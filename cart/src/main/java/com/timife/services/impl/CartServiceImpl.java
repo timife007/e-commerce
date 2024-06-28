@@ -38,42 +38,25 @@ public class CartServiceImpl implements CartService {
         ProductSizeResponse productSize = productsFeignClient.selectOrderByProductSize(orderItemDto).getBody();
         OrderItem orderItem = orderItemRepository.findByCartUserIdAndProductSizeId(orderItemDto.getUserId(), productSize.getId());
         Cart presentCart = cartRepository.findByUserId(orderItemDto.getUserId());
-        if(presentCart != null){
+        if (presentCart != null) {
             Double currentTotal = presentCart.getSumTotal();
             if (orderItem != null) {
                 orderItem.setQty(orderItem.getQty() + 1);
                 orderItem.setTotalPrice(orderItem.getTotalPrice() + productSize.getPrice());
-                presentCart.setSumTotal(currentTotal + productSize.getPrice());
-//                cartRepository.save(presentCart);
+                presentCart.setSubTotal(currentTotal + productSize.getPrice());
                 presentCart.getOrderItems().add(orderItem);
                 return cartRepository.save(presentCart);
             }
-            OrderItem newOrderItem = OrderItem.builder()
-                    .productId(orderItemDto.getProductId())
-                    .qty(1)
-                    .productSizeId(productSize.getId())
-                    .sizeId(orderItemDto.getSizeId())
-                    .totalPrice(productSize.getPrice())
-                    .unitPrice(productSize.getPrice())
-                    .cart(presentCart)
-                    .build();
+            OrderItem newOrderItem = getOrderItem(productSize, orderItemDto, presentCart);
             presentCart.getOrderItems().add(newOrderItem);
-            presentCart.setSumTotal(currentTotal + newOrderItem.getTotalPrice());
+            presentCart.setSubTotal(currentTotal + newOrderItem.getTotalPrice());
             return cartRepository.save(presentCart);
         }
         Cart newCart = new Cart();
         newCart.setUserId(orderItemDto.getUserId());
-        OrderItem newOrderItem = OrderItem.builder()
-                .productId(orderItemDto.getProductId())
-                .qty(1)
-                .productSizeId(productSize.getId())
-                .sizeId(orderItemDto.getSizeId())
-                .totalPrice(productSize.getPrice())
-                .unitPrice(productSize.getPrice())
-                .cart(newCart)
-                .build();
+        OrderItem newOrderItem = getOrderItem(productSize, orderItemDto, newCart);
         newCart.getOrderItems().add(newOrderItem);
-        newCart.setSumTotal(0.0 + newOrderItem.getTotalPrice());
+        newCart.setSubTotal(0.0 + newOrderItem.getTotalPrice());
         return cartRepository.save(newCart);
     }
 
@@ -91,10 +74,23 @@ public class CartServiceImpl implements CartService {
         OrderItem orderItem = orderItemRepository.findById(updateOrderItemDto.getOrderItemId()).orElseThrow();
         orderItem.setQty(updateOrderItemDto.getQty());
         orderItem.setTotalPrice(orderItem.getUnitPrice() * updateOrderItemDto.getQty());
-//        orderItemRepository.save(orderItem);
         orderItemRepository.save(orderItem);
         Cart cart = orderItem.getCart();
-        cart.setSumTotal(cart.getOrderItems().stream().mapToDouble(OrderItem::getTotalPrice).sum());
-        return cartRepository.save(cart) ;
+        cart.setSubTotal(cart.getOrderItems().stream().mapToDouble(OrderItem::getTotalPrice).sum());
+        return cartRepository.save(cart);
+    }
+
+    public OrderItem getOrderItem(ProductSizeResponse productSize, OrderItemDto orderItemDto, Cart cart) {
+        return OrderItem.builder()
+                .productId(orderItemDto.getProductId())
+                .qty(1)
+                .productSizeId(productSize.getId())
+                .sizeId(orderItemDto.getSizeId())
+                .totalPrice(productSize.getPrice())
+                .unitPrice(productSize.getPrice())
+                .cart(cart)
+                .build();
     }
 }
+
+
