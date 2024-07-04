@@ -26,6 +26,15 @@ public class CartController {
         }
     }
 
+    @PostMapping("/checkout")
+    public ResponseEntity<?> checkOut(@RequestBody OrderItemDto orderItemDto) {
+        try {
+            return ResponseEntity.ok(cartService.selectOrder(orderItemDto));
+        } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserCart( @PathVariable("id") Long userId) {

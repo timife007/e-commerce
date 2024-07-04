@@ -1,7 +1,7 @@
 package com.timife.controllers;
 
 import com.timife.models.entities.RefreshToken;
-import com.timife.models.entities.User;
+import com.timife.models.requests.AddressRequest;
 import com.timife.models.requests.AuthRequestDto;
 import com.timife.models.requests.RefreshTokenRequestDto;
 import com.timife.models.requests.UserRequestDto;
@@ -26,7 +26,7 @@ import static com.timife.utils.ValidationUtils.validatePasswordAndEmail;
 @Slf4j
 public class AuthController {
 
-    private final UserService detailsService;
+    private final UserService userService;
     private final RefreshTokenRepository repository;
     private final AuthenticationService authService;
 
@@ -101,6 +101,15 @@ public class AuthController {
 
     @GetMapping("/users")
     ResponseEntity<?> getAllUsers(Pageable pageable) {
-        return ResponseEntity.ok(detailsService.getAllUsers(pageable));
+        return ResponseEntity.ok(userService.getAllUsers(pageable));
+    }
+
+    @PostMapping("/deliveryAddress")
+    ResponseEntity<?> addAddressToUser(@RequestBody AddressRequest addressRequest){
+        try {
+            return ResponseEntity.ok(userService.addAddressToUser(addressRequest));
+        } catch (Exception e) {
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 }

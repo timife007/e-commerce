@@ -39,7 +39,7 @@ public class CartServiceImpl implements CartService {
         OrderItem orderItem = orderItemRepository.findByCartUserIdAndProductSizeId(orderItemDto.getUserId(), productSize.getId());
         Cart presentCart = cartRepository.findByUserId(orderItemDto.getUserId());
         if (presentCart != null) {
-            Double currentTotal = presentCart.getSumTotal();
+            Double currentTotal = presentCart.getSubTotal();
             if (orderItem != null) {
                 orderItem.setQty(orderItem.getQty() + 1);
                 orderItem.setTotalPrice(orderItem.getTotalPrice() + productSize.getPrice());
@@ -78,6 +78,13 @@ public class CartServiceImpl implements CartService {
         Cart cart = orderItem.getCart();
         cart.setSubTotal(cart.getOrderItems().stream().mapToDouble(OrderItem::getTotalPrice).sum());
         return cartRepository.save(cart);
+    }
+
+    @Override
+    public String setDeliveryFeeBasedOn(String address) {
+        //TODO: Add a new delivery address if needed to the specific user
+        //use the last index address as the default for each user.
+        return null;
     }
 
     public OrderItem getOrderItem(ProductSizeResponse productSize, OrderItemDto orderItemDto, Cart cart) {

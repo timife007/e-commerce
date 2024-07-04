@@ -11,4 +11,6 @@ public interface CartService {
     public Cart findCartById(Long userId);
 
     public Cart updateOrder(UpdateOrderItemDto updateOrderItemDto);
+
+    public String setDeliveryFeeBasedOn(String address);
 }

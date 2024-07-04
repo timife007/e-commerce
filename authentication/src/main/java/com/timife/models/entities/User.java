@@ -1,5 +1,6 @@
 package com.timife.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.timife.models.Interest;
 import com.timife.models.Role;
 import jakarta.persistence.*;
@@ -7,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,8 +33,9 @@ public class User implements UserDetails {
     private Role role;
     private String dateOfBirth;
 
-    @OneToMany
-    private List<Address> deliveryAddresses;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonManagedReference
+    private List<DeliveryAddress> deliveryAddresses;
 
 
     private String password;
