@@ -1,14 +1,14 @@
 server:
-  port: 8083
+  port: 8082
 
 spring:
   docker:
     compose:
-      file: ./cart/docker-compose.yml
+      file: ./inventory/docker-compose.yml
 #  profiles:
 #    active: production
   datasource:
-    url: jdbc:postgresql://localhost:5435/ecommerce-cart
+    url: jdbc:postgresql://localhost:5434/ecommerce-inventory
     password: secret
     username: timife
   jpa:
@@ -20,7 +20,7 @@ spring:
         format_sql: true
     show-sql: true
   application:
-    name: cart
+    name: inventory
 #eureka:
 #  client:
 #    service-url:

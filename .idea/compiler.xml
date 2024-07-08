@@ -7,9 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="catalog" />
         <module name="profiles" />
-        <module name="order-management" />
         <module name="inventory" />
         <module name="eureka-server" />
         <module name="cart" />
@@ -17,15 +15,17 @@
         <module name="notification" />
         <module name="search" />
         <module name="reviews" />
-        <module name="content-management" />
         <module name="gateway-service" />
         <module name="payment" />
-        <module name="categories" />
         <module name="authentication" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="catalog" target="21" />
+      <module name="categories" target="21" />
       <module name="category" target="21" />
+      <module name="content-management" target="21" />
+      <module name="order-management" target="21" />
       <module name="products" target="21" />
     </bytecodeTargetLevel>
   </component>

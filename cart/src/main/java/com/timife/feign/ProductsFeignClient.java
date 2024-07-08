@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient("CATEGORIES")
+@FeignClient("INVENTORY")
 public interface ProductsFeignClient {
 
     @PostMapping("product/productSize")

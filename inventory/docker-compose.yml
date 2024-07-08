@@ -1,0 +1,16 @@
+services:
+  inventory-db:
+    container_name: inventory-db
+    image: postgres
+    env_file:
+      - ../env/inventory.env
+    ports:
+      - "5434:5432"
+  pgadmin:
+    container_name: pgadmin-inventory
+    image: dpage/pgadmin4
+    env_file:
+      - ../env/inventory.env
+    ports:
+      - "5051:80"
+    restart: unless-stopped
