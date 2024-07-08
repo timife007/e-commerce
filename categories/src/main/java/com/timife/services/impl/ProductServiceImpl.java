@@ -7,7 +7,6 @@ import com.timife.model.responses.ProductResponse;
 import com.timife.model.responses.ProductSizeResponse;
 import com.timife.repositories.*;
 import com.timife.services.ProductService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ProductServiceImpl implements ProductService {
     @Autowired
-    private productRepository productRepository;
+    private ProductRepository productRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -46,6 +45,10 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse saveProduct(ProductRequest productRequest) {
 
         Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
+        if(productRepository.findByProductCode(productRequest.getProductCode()) != null){
+            throw new RuntimeException("Product already present");
+        }
+
         Product newProduct = createProduct(productRequest, category);
 
         //Handle Image relationships
