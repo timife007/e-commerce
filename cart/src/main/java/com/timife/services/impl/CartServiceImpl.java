@@ -1,10 +1,13 @@
 package com.timife.services.impl;
 
+import com.timife.feign.AuthFeignClient;
 import com.timife.feign.ProductsFeignClient;
+import com.timife.model.dtos.DeliveryAddressDto;
 import com.timife.model.dtos.OrderItemDto;
 import com.timife.model.dtos.UpdateOrderItemDto;
 import com.timife.model.entities.Cart;
 import com.timife.model.entities.OrderItem;
+import com.timife.model.responses.CheckoutResponse;
 import com.timife.model.responses.ProductSizeResponse;
 import com.timife.repositories.OrderItemRepository;
 import com.timife.repositories.CartRepository;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +35,10 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     private ProductsFeignClient productsFeignClient;
+
+    @Autowired
+    private AuthFeignClient authFeignClient;
+
 
     @Override
     public Cart selectOrder(OrderItemDto orderItemDto) {
@@ -85,6 +93,22 @@ public class CartServiceImpl implements CartService {
         //TODO: Add a new delivery address if needed to the specific user
         //use the last index address as the default for each user.
         return null;
+    }
+
+    @Override
+    public CheckoutResponse checkout(Integer userId) {
+        Cart cart = cartRepository.findByUserId(Long.valueOf(userId));
+        List<DeliveryAddressDto> addressDtoList = authFeignClient.getUserAddresses(userId).getBody();
+        Double deliveryFee = 30.0;
+        Double totalFee = deliveryFee + cart.getSubTotal();
+        return CheckoutResponse.builder()
+                .userId(Long.valueOf(userId))
+                .orderItems(cart.getOrderItems())
+                .subTotal(cart.getSubTotal())
+                .deliveryFee(20.0)
+                .sumTotal(totalFee)
+                .deliveryAddressDto(addressDtoList)
+                .build();
     }
 
     public OrderItem getOrderItem(ProductSizeResponse productSize, OrderItemDto orderItemDto, Cart cart) {

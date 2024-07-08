@@ -25,6 +25,8 @@ public class DeliveryAddress {
     private String state;
     private String country;
     private String postCode;
+    private Boolean isDefault;
+    private Boolean isBilling;
 
     @ManyToOne
     @JsonBackReference

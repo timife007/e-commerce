@@ -14,9 +14,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeliveryAddressDto {
-    private String street;
+    private String phoneNumber;
+    private String firstName;
+    private String lastName;
+    private String address;
     private String city;
     private String state;
     private String country;
-    private String zipCode;
+    private String postCode;
+    private Boolean isDefault;
+    private Boolean isBilling;
 }

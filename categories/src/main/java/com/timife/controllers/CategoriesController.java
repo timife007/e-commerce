@@ -86,7 +86,7 @@ public class CategoriesController {
             @PathVariable("id") Long genderId
     ) {
         try {
-            return ResponseEntity.ok(categoryService.getAllCategories().stream().filter((category) -> Objects.equals(category.getGenderId(), genderId)));
+            return ResponseEntity.ok(categoryService.getAllCategories());
         } catch (Exception e) {
             return errorEntity(e.getLocalizedMessage(), HttpStatus.NO_CONTENT);
         }

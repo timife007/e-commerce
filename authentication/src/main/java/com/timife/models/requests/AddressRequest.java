@@ -19,4 +19,6 @@ public class AddressRequest {
     private String state;
     private String country;
     private String zipCode;
+    private Boolean isDefault;
+    private Boolean isBilling;
 }

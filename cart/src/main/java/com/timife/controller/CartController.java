@@ -26,18 +26,20 @@ public class CartController {
         }
     }
 
-    @PostMapping("/checkout")
-    public ResponseEntity<?> checkOut(@RequestBody OrderItemDto orderItemDto) {
+    @GetMapping("/checkout/{userId}")
+    public ResponseEntity<?> checkOut(@PathVariable("userId") Integer userId) {
         try {
-            return ResponseEntity.ok(cartService.selectOrder(orderItemDto));
+            return ResponseEntity.ok(cartService.checkout(userId));
         } catch (Exception e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }
     }
 
 
+
+
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserCart( @PathVariable("id") Long userId) {
+    public ResponseEntity<?> viewCart( @PathVariable("id") Long userId) {
         try {
             return ResponseEntity.ok(cartService.findCartById(userId));
         } catch (Exception e) {

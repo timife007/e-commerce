@@ -27,10 +27,4 @@ public class  Cart {
     @JsonManagedReference
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     List<OrderItem> orderItems = new ArrayList<>();
-
-//    public void updateTotalPrice() {
-//        this.sumTotal = orderItems.stream()
-//                .mapToDouble(OrderItem::getTotalPrice)
-//                .sum();
-//    }
 }

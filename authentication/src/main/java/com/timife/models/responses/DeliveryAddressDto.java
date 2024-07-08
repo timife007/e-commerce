@@ -1,9 +1,5 @@
-package com.timife.model.dtos;
+package com.timife.models.responses;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeliveryAddressDto {
+    private Long id;
+    private Long userId;
     private String phoneNumber;
     private String firstName;
     private String lastName;

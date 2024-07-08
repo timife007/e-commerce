@@ -73,11 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryListResponse> getAllCategories() {
-        return categoryRepository
-                .findAll().stream().map((category) -> {
-                    Long parentId = category.getParentCategory() != null ? category.getParentCategory().getId() : null;
-                    return CategoryListResponse.builder().id(category.getId()).name(category.getName()).genderId(category.getGender().getId()).parentId(parentId).build();
-                }).toList();
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 }

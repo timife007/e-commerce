@@ -1,10 +1,12 @@
 package com.timife.controllers;
 
+import com.timife.models.entities.DeliveryAddress;
 import com.timife.models.entities.RefreshToken;
 import com.timife.models.requests.AddressRequest;
 import com.timife.models.requests.AuthRequestDto;
 import com.timife.models.requests.RefreshTokenRequestDto;
 import com.timife.models.requests.UserRequestDto;
+import com.timife.models.responses.DeliveryAddressDto;
 import com.timife.repositories.RefreshTokenRepository;
 import com.timife.services.AuthenticationService;
 import com.timife.services.UserService;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.Path;
 import java.util.List;
 
 import static com.timife.utils.ValidationUtils.errorEntity;
@@ -108,6 +111,20 @@ public class AuthController {
     ResponseEntity<?> addAddressToUser(@RequestBody AddressRequest addressRequest){
         try {
             return ResponseEntity.ok(userService.addAddressToUser(addressRequest));
+        } catch (Exception e) {
+            return errorEntity(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/deliveryAddress/{userId}")
+    ResponseEntity<List<DeliveryAddressDto>> getUserAddresses(@PathVariable("userId") Integer userId){
+            return ResponseEntity.ok(userService.getUserDeliveryAddresses(userId));
+    }
+
+    @PutMapping("/deliveryAddress/{id}")
+    ResponseEntity<?> updateDeliveryAddress(@PathVariable("id") Long id,@RequestBody AddressRequest addressRequest){
+        try {
+            return ResponseEntity.ok(userService.updateDeliveryAddress(id, addressRequest));
         } catch (Exception e) {
             return errorEntity(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }

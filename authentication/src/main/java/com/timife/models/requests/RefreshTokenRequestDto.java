@@ -12,6 +12,5 @@ import javax.persistence.Entity;
 @Builder
 @NoArgsConstructor
 public class RefreshTokenRequestDto {
-
     private String refreshToken;
 }
