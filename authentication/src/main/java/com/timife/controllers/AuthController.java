@@ -80,7 +80,6 @@ public class AuthController {
         }
         try {
             log.error("LOGIN code was triggered");
-
             return ResponseEntity.ok(authService.authenticate(authRequestDTO));
         } catch (Exception e) {
             return errorEntity(e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);

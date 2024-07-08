@@ -51,6 +51,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public DeliveryAddress addAddressToUser(AddressRequest addressRequest) {
         User user = userRepository.findById(addressRequest.getUserId()).orElseThrow();
+        isBillingAndIsDefaultListener(addressRequest, user);
+        DeliveryAddress deliveryAddress = deliveryAddressRepository.findByPostCodeAndUserId(addressRequest.getZipCode(), Long.valueOf(addressRequest.getUserId()));
+        if(deliveryAddress != null){
+            throw new RuntimeException("Address is already saved");
+        }
         DeliveryAddress newDeliveryAddress = DeliveryAddress.builder()
                 .city(addressRequest.getCity())
                 .country(addressRequest.getCountry())
@@ -93,6 +98,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public DeliveryAddress updateDeliveryAddress(Long id, AddressRequest addressRequest) {
         DeliveryAddress deliveryAddress = deliveryAddressRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(addressRequest.getUserId()).orElseThrow();
+        isBillingAndIsDefaultListener(addressRequest, user);
         deliveryAddress.setAddress(addressRequest.getAddress());
         deliveryAddress.setCity(addressRequest.getCity());
         deliveryAddress.setFirstName(addressRequest.getFirstName());
@@ -102,5 +109,23 @@ public class UserServiceImpl implements UserService {
         return deliveryAddressRepository.save(deliveryAddress);
     }
 
+    //Update other addresses of their isBilling  and isDefault fields when updating one address.
+    void isBillingAndIsDefaultListener(AddressRequest addressRequest, User user) {
+        if (addressRequest.getIsDefault()) {
+            DeliveryAddress defaultAddress = user.getDeliveryAddresses().stream().filter(DeliveryAddress::getIsDefault).findFirst().orElse(null);
+            if (defaultAddress != null) {
+                defaultAddress.setIsDefault(false);
+                deliveryAddressRepository.save(defaultAddress);
+            }
+        }
+
+        if (addressRequest.getIsBilling()) {
+            DeliveryAddress defaultAddress = user.getDeliveryAddresses().stream().filter(DeliveryAddress::getIsBilling).findFirst().orElse(null);
+            if (defaultAddress != null) {
+                defaultAddress.setIsBilling(false);
+                deliveryAddressRepository.save(defaultAddress);
+            }
+        }
+    }
 
 }
