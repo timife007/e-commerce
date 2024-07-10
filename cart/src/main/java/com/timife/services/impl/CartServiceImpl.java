@@ -91,14 +91,14 @@ public class CartServiceImpl implements CartService {
     public Cart updateOrder(UpdateOrderItemDto updateOrderItemDto) {
         OrderItem orderItem = orderItemRepository.findById(updateOrderItemDto.getOrderItemId()).orElseThrow();
         Integer initialQty = orderItem.getQty();
+        //reserve order and update  with respect to the new qty either +ve or -ve.
+        ReserveOrderItemDto newReservedOrderItem = ReserveOrderItemDto.builder().productSizeId(orderItem.getProductSizeId()).qty(updateOrderItemDto.getQty() - initialQty).build();
+        reserveProduct(newReservedOrderItem);
         orderItem.setQty(updateOrderItemDto.getQty());
         orderItem.setTotalPrice(orderItem.getUnitPrice() * updateOrderItemDto.getQty());
         orderItemRepository.save(orderItem);
         Cart cart = orderItem.getCart();
         cart.setSubTotal(cart.getOrderItems().stream().mapToDouble(OrderItem::getTotalPrice).sum());
-        //reserve order and update  with respect to the new qty either +ve or -ve.
-        ReserveOrderItemDto newReservedOrderItem = ReserveOrderItemDto.builder().productSizeId(orderItem.getProductSizeId()).qty(updateOrderItemDto.getQty() - initialQty).build();
-        reserveProduct(newReservedOrderItem);
         return cartRepository.save(cart);
     }
 
