@@ -5,12 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Builder
 @Data
-public class OrderItemDto {
-    private Long userId;
-    private Long productId;
-    private Long sizeId;
+@AllArgsConstructor
+@NoArgsConstructor
+public class ReserveOrderItemDto {
+
+    private Long productSizeId;
+    private Integer qty;
 }

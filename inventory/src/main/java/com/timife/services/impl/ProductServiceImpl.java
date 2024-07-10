@@ -1,6 +1,7 @@
 package com.timife.services.impl;
 
 import com.timife.model.dtos.ProductRequest;
+import com.timife.model.dtos.ReserveOrderItemDto;
 import com.timife.model.dtos.SelectOrderDto;
 import com.timife.model.entities.*;
 import com.timife.model.responses.ProductResponse;
@@ -45,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse saveProduct(ProductRequest productRequest) {
 
         Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
-        if(productRepository.findByProductCode(productRequest.getProductCode()) != null){
+        if (productRepository.findByProductCode(productRequest.getProductCode()) != null) {
             throw new RuntimeException("Product already present");
         }
 
@@ -146,6 +147,21 @@ public class ProductServiceImpl implements ProductService {
                 .id(productSize.getId())
                 .price(productSize.getProduct()
                         .getSalePrice()).build();
+    }
+
+    @Override
+    public boolean reserve(ReserveOrderItemDto orderItem) {
+        //Check if the order qty is -ve or +ve and update as required.
+        ProductSize productSize = productSizeRepository.findById(orderItem.getProductSizeId()).orElseThrow();
+        int qtyInStock = productSize.getQtyInStock();
+        if (qtyInStock < orderItem.getQty()) {
+            return false;
+        }
+        int reservedQty = (productSize.getReserved() != null) ? productSize.getReserved() : 0;
+        productSize.setReserved(reservedQty + orderItem.getQty());
+        productSize.setQtyInStock(qtyInStock - orderItem.getQty());
+        productSizeRepository.save(productSize);
+        return true;
     }
 
     @Override

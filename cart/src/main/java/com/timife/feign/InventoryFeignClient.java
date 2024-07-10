@@ -1,21 +1,20 @@
 package com.timife.feign;
 
-import com.timife.model.dtos.DeliveryAddressDto;
 import com.timife.model.dtos.OrderItemDto;
+import com.timife.model.dtos.ReserveOrderItemDto;
 import com.timife.model.responses.ProductSizeResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
-
 @FeignClient("INVENTORY")
-public interface ProductsFeignClient {
+public interface InventoryFeignClient {
 
     @PostMapping("product/productSize")
     public ResponseEntity<ProductSizeResponse> selectOrderByProductSize(@RequestBody OrderItemDto selectOrderDto);
+
+
+    @PostMapping("product/reserve")
+    public ResponseEntity<Boolean> reserveProduct(@RequestBody ReserveOrderItemDto reserveOrderItemDto);
 }

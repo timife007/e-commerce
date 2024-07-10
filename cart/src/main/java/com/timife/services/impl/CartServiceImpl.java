@@ -1,9 +1,10 @@
 package com.timife.services.impl;
 
 import com.timife.feign.AuthFeignClient;
-import com.timife.feign.ProductsFeignClient;
+import com.timife.feign.InventoryFeignClient;
 import com.timife.model.dtos.DeliveryAddressDto;
 import com.timife.model.dtos.OrderItemDto;
+import com.timife.model.dtos.ReserveOrderItemDto;
 import com.timife.model.dtos.UpdateOrderItemDto;
 import com.timife.model.entities.Cart;
 import com.timife.model.entities.OrderItem;
@@ -17,9 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -34,7 +32,7 @@ public class CartServiceImpl implements CartService {
     private OrderItemRepository orderItemRepository;
 
     @Autowired
-    private ProductsFeignClient productsFeignClient;
+    private InventoryFeignClient inventoryFeignClient;
 
     @Autowired
     private AuthFeignClient authFeignClient;
@@ -43,11 +41,15 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart selectOrder(OrderItemDto orderItemDto) {
 
-        ProductSizeResponse productSize = productsFeignClient.selectOrderByProductSize(orderItemDto).getBody();
+        ProductSizeResponse productSize = inventoryFeignClient.selectOrderByProductSize(orderItemDto).getBody();
         OrderItem orderItem = orderItemRepository.findByCartUserIdAndProductSizeId(orderItemDto.getUserId(), productSize.getId());
         Cart presentCart = cartRepository.findByUserId(orderItemDto.getUserId());
+        ReserveOrderItemDto reserveOrderItemDto = ReserveOrderItemDto.builder().productSizeId(productSize.getId()).qty(1).build();
+        reserveProduct(reserveOrderItemDto);
         if (presentCart != null) {
             Double currentTotal = presentCart.getSubTotal();
+            //reserve inventory item
+//            reserveProduct(reserveOrderItemDto);
             if (orderItem != null) {
                 orderItem.setQty(orderItem.getQty() + 1);
                 orderItem.setTotalPrice(orderItem.getTotalPrice() + productSize.getPrice());
@@ -65,7 +67,15 @@ public class CartServiceImpl implements CartService {
         OrderItem newOrderItem = getOrderItem(productSize, orderItemDto, newCart);
         newCart.getOrderItems().add(newOrderItem);
         newCart.setSubTotal(0.0 + newOrderItem.getTotalPrice());
+
         return cartRepository.save(newCart);
+    }
+
+    void reserveProduct(ReserveOrderItemDto reserveOrderItemDto){
+        Boolean isReserved = inventoryFeignClient.reserveProduct(reserveOrderItemDto).getBody();
+        if (isReserved != null && !isReserved) {
+            throw new RuntimeException("product not reserved successfully");
+        }
     }
 
     @Override
@@ -80,11 +90,15 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart updateOrder(UpdateOrderItemDto updateOrderItemDto) {
         OrderItem orderItem = orderItemRepository.findById(updateOrderItemDto.getOrderItemId()).orElseThrow();
+        Integer initialQty = orderItem.getQty();
         orderItem.setQty(updateOrderItemDto.getQty());
         orderItem.setTotalPrice(orderItem.getUnitPrice() * updateOrderItemDto.getQty());
         orderItemRepository.save(orderItem);
         Cart cart = orderItem.getCart();
         cart.setSubTotal(cart.getOrderItems().stream().mapToDouble(OrderItem::getTotalPrice).sum());
+        //reserve order and update  with respect to the new qty either +ve or -ve.
+        ReserveOrderItemDto newReservedOrderItem = ReserveOrderItemDto.builder().productSizeId(orderItem.getProductSizeId()).qty(updateOrderItemDto.getQty() - initialQty).build();
+        reserveProduct(newReservedOrderItem);
         return cartRepository.save(cart);
     }
 

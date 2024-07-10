@@ -198,4 +198,8 @@ public class InventoryController {
         return ResponseEntity.ok(productService.selectOrderRequest(selectOrderDto));
     }
 
+    @PostMapping("/reserve")
+    public ResponseEntity<Boolean> reserveProduct(@RequestBody ReserveOrderItemDto reserveOrderItemDto) {
+        return ResponseEntity.ok(productService.reserve(reserveOrderItemDto));
+    }
 }

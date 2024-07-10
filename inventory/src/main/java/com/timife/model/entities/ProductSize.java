@@ -26,6 +26,8 @@ public class ProductSize {
     @JsonBackReference
     private Product product;
 
+    private Integer reserved;
+
     @ManyToOne
     @JoinColumn(name = "size_id")
     @JsonBackReference

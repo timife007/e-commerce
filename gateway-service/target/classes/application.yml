@@ -24,8 +24,8 @@ spring:
             - Path=/auth/**
           filters:
             - AuthenticationFilter
-        - id: categories
-          uri: lb://categories
+        - id: inventory
+          uri: lb://inventory
           predicates:
             - Path=/product/**
         - id: cart
@@ -33,4 +33,4 @@ spring:
           predicates:
             - Path=/cart/**
 server:
-  port: 8088
+  port: 8080

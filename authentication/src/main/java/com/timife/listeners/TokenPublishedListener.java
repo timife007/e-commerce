@@ -22,8 +22,6 @@ public class TokenPublishedListener {
 
     private final AuthenticationService authenticationService;
 
-//    private final NotificationService notificationService;
-
     @KafkaListener(id = "token",topics = "token.published")
     public String listens(final String token) {
         log.info("Received Token: {}", token);

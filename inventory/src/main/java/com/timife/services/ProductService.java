@@ -1,6 +1,7 @@
 package com.timife.services;
 
 import com.timife.model.dtos.ProductRequest;
+import com.timife.model.dtos.ReserveOrderItemDto;
 import com.timife.model.dtos.SelectOrderDto;
 import com.timife.model.entities.Image;
 import com.timife.model.entities.Product;
@@ -34,4 +35,6 @@ public interface ProductService {
     public void deleteProduct(Long id);
 
     public ProductSizeResponse selectOrderRequest(SelectOrderDto selectOrderDto);
+
+    public boolean reserve(ReserveOrderItemDto orderItems);
 }

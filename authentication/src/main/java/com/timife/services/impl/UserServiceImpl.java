@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(addressRequest.getUserId()).orElseThrow();
         isBillingAndIsDefaultListener(addressRequest, user);
         DeliveryAddress deliveryAddress = deliveryAddressRepository.findByPostCodeAndUserId(addressRequest.getZipCode(), Long.valueOf(addressRequest.getUserId()));
-        if(deliveryAddress != null){
+        if (deliveryAddress != null) {
             throw new RuntimeException("Address is already saved");
         }
         DeliveryAddress newDeliveryAddress = DeliveryAddress.builder()
@@ -61,8 +61,8 @@ public class UserServiceImpl implements UserService {
                 .country(addressRequest.getCountry())
                 .state(addressRequest.getState())
                 .phoneNumber(addressRequest.getMobile())
-                .isBilling(addressRequest.getIsBilling())
-                .isDefault(addressRequest.getIsDefault())
+                .isBilling(getItemOrDefault(addressRequest.getIsBilling()))
+                .isDefault(getItemOrDefault(addressRequest.getIsDefault()))
                 .postCode(addressRequest.getZipCode())
                 .firstName(addressRequest.getFirstName())
                 .lastName(addressRequest.getLastName())
@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
 
     //Update other addresses of their isBilling  and isDefault fields when updating one address.
     void isBillingAndIsDefaultListener(AddressRequest addressRequest, User user) {
-        if (addressRequest.getIsDefault()) {
+        if (getItemOrDefault(addressRequest.getIsDefault())) {
             DeliveryAddress defaultAddress = user.getDeliveryAddresses().stream().filter(DeliveryAddress::getIsDefault).findFirst().orElse(null);
             if (defaultAddress != null) {
                 defaultAddress.setIsDefault(false);
@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        if (addressRequest.getIsBilling()) {
+        if (getItemOrDefault(addressRequest.getIsBilling())) {
             DeliveryAddress defaultAddress = user.getDeliveryAddresses().stream().filter(DeliveryAddress::getIsBilling).findFirst().orElse(null);
             if (defaultAddress != null) {
                 defaultAddress.setIsBilling(false);
@@ -128,4 +128,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public boolean getItemOrDefault(Boolean item) {
+        return (item != null) ? item : false;
+    }
+
+
 }
+
+
