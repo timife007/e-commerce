@@ -20,7 +20,6 @@
         <module>authentication</module>
         <module>notification</module>
         <module>inventory</module>
-        <module>categories</module>
         <module>search</module>
         <module>analytics</module>
         <module>eureka-server</module>

@@ -1,0 +1,16 @@
+services:
+  cart-db:
+    container_name: payment-db
+    image: postgres
+    env_file:
+      - ../env/payment.env
+    ports:
+      - "5436:5432"
+  pgadmin:
+    container_name: pgadmin-cart
+    image: dpage/pgadmin4
+    env_file:
+      - ../env/payment.env
+    ports:
+      - "5053:80"
+    restart: unless-stopped

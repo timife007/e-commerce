@@ -25,7 +25,6 @@ public class TokenPublishedListener {
     @KafkaListener(id = "token",topics = "token.published")
     public String listens(final String token) {
         log.info("Received Token: {}", token);
-
         try {
 //            final Map<String, Object> payload = readJsonAsMap(token);
             String validate = authenticationService.validateToken(token);

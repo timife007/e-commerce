@@ -1,0 +1,26 @@
+server:
+  port: 8084
+payment:
+  kafka:
+    topic: payment.published
+
+spring:
+  docker:
+    compose:
+      file: ./payment/docker-compose.yml
+  #  profiles:
+  #    active: production
+  datasource:
+    url: jdbc:postgresql://localhost:5436/ecommerce-cart
+    password: secret
+    username: timife
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+  application:
+    name: payment

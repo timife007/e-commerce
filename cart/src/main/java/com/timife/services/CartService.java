@@ -16,4 +16,6 @@ public interface CartService {
     public String setDeliveryFeeBasedOn(String address);
 
     public CheckoutResponse checkout(Integer userId);
+
+    public String confirmOrder(Long userId);
 }

@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequestMapping("/cart")
 @RequiredArgsConstructor
@@ -36,10 +37,8 @@ public class CartController {
     }
 
 
-
-
     @GetMapping("/{id}")
-    public ResponseEntity<?> viewCart( @PathVariable("id") Long userId) {
+    public ResponseEntity<?> viewCart(@PathVariable("id") Long userId) {
         try {
             return ResponseEntity.ok(cartService.findCartById(userId));
         } catch (Exception e) {
@@ -48,9 +47,19 @@ public class CartController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateOrderItem( @RequestBody UpdateOrderItemDto updateOrderItemDto) {
+    public ResponseEntity<?> updateOrderItem(@RequestBody UpdateOrderItemDto updateOrderItemDto) {
         try {
             return ResponseEntity.ok(cartService.updateOrder(updateOrderItemDto));
+        } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+    }
+
+    @PostMapping("confirmOrder/{userId}")
+    public ResponseEntity<?> confirmOrder(@PathVariable("userId") Long userId) {
+        try {
+
+            return ResponseEntity.ok("Order successfully places");
         } catch (Exception e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }
