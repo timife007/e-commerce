@@ -1,5 +1,5 @@
 services:
-  cart-db:
+  payment-db:
     container_name: payment-db
     image: postgres
     env_file:
@@ -7,7 +7,7 @@ services:
     ports:
       - "5436:5432"
   pgadmin:
-    container_name: pgadmin-cart
+    container_name: pgadmin-payment
     image: dpage/pgadmin4
     env_file:
       - ../env/payment.env
