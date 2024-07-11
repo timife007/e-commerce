@@ -11,6 +11,7 @@ import com.timife.model.entities.Order;
 import com.timife.model.entities.OrderItem;
 import com.timife.model.entities.OrderStatus;
 import com.timife.model.responses.CheckoutResponse;
+import com.timife.model.responses.OrderResponse;
 import com.timife.model.responses.ProductSizeResponse;
 import com.timife.repositories.OrderItemRepository;
 import com.timife.repositories.CartRepository;
@@ -154,8 +155,17 @@ public class CartServiceImpl implements CartService {
             Order newOrder = Order.builder().orderStatus(OrderStatus.ORDER_SUCCESSFUL).cart(cart).build();
             Order order = orderRepository.save(newOrder);
             cartRepository.deleteById(userId);
+            OrderResponse orderResponse = OrderResponse
+                    .builder()
+                    .id(order.getId())
+                    .userId(order.getCart().getUserId())
+                    .orderStatus(order.getOrderStatus())
+                    .subTotal(order.getCart().getSubTotal())
+                    .sumTotal(order.getCart().getSumTotal())
+                    .build();
             //Send topic to kafka to signal order successfully placed.
-            orderPublisherService.publish(order);
+            //fix delivery fee.
+            orderPublisherService.publish(orderResponse);
             return "Order successfully placed";
         } catch (Exception e) {
             throw new RuntimeException(e.getLocalizedMessage());

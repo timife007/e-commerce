@@ -1,6 +1,8 @@
 package com.timife.services;
 
+import com.timife.model.OrderResponse;
+
 public interface PaymentService {
 
-    String paymentApproved();
+    String paymentApproved(OrderResponse orderResponse);
 }

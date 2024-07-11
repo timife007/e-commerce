@@ -1,10 +1,10 @@
 package com.timife.listeners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.timife.model.OrderResponse;
 import com.timife.services.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Order;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -22,8 +22,8 @@ public class OrderPlacedListener {
     public String listens(final String order) {
         log.info("Received Token: {}", order);
         try {
-            Order item = objectMapper.readValue(order, Order.class);
-            String validate = paymentService.paymentApproved();
+            OrderResponse item = objectMapper.readValue(order, OrderResponse.class);
+            String validate = paymentService.paymentApproved(item);
             log.error(item.toString());
         } catch (Exception exception) {
             log.error("Invalid validation: {}", exception.getLocalizedMessage());
