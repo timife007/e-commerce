@@ -18,6 +18,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToOne
     private Cart cart;
     private OrderStatus orderStatus;
 }

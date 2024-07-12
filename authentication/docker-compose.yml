@@ -1,23 +1,25 @@
+version: '3'
 services:
-  cart-db:
-    container_name: cart-db
+  auth-db:
+    container_name: auth-postgres-db
     image: postgres
     env_file:
-      - ../env/cart.env
+      - ../env/auth.env
     ports:
-      - "5435:5432"
+      - "5433:5432"
     networks:
       - kafka-network
   pgadmin:
-    container_name: pgadmin-cart
+    container_name: auth-pgadmin
     image: dpage/pgadmin4
     env_file:
-      - ../env/cart.env
+      - ../env/auth.env
     ports:
-      - "5052:80"
+      - "5050:80"
     restart: unless-stopped
     networks:
       - kafka-network
+
 networks:
-    kafka-network:
-      external: true
+  kafka-network:
+    external: true

@@ -8,8 +8,8 @@ spring:
   docker:
     compose:
       file: ./payment/docker-compose.yml
-  #  profiles:
-  #    active: production
+  kafka:
+    bootstrap-servers: localhost:9092
   datasource:
     url: jdbc:postgresql://localhost:5436/ecommerce-payment
     password: secret

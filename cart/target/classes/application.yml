@@ -1,12 +1,15 @@
 server:
   port: 8083
+order:
+  kafka:
+    topic: order.published
 
 spring:
   docker:
     compose:
       file: ./cart/docker-compose.yml
-#  profiles:
-#    active: production
+  kafka:
+    bootstrap-servers: kafka:9092
   datasource:
     url: jdbc:postgresql://localhost:5435/ecommerce-cart
     password: secret
@@ -21,9 +24,9 @@ spring:
     show-sql: true
   application:
     name: cart
-#eureka:
-#  client:
-#    service-url:
-#      defaultZone: http://localhost:8761/eureka
-#    fetch-registry: true
-#    register-with-eureka: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true

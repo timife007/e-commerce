@@ -4,7 +4,9 @@ server:
 spring:
   docker:
     compose:
-      file: ./docker-compose.yml
+      file: ./authentication/docker-compose.yml
+  kafka:
+    bootstrap-servers: localhost:9092
   profiles:
     active: production
   datasource:

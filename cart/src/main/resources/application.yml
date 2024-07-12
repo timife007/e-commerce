@@ -8,8 +8,8 @@ spring:
   docker:
     compose:
       file: ./cart/docker-compose.yml
-#  profiles:
-#    active: production
+  kafka:
+    bootstrap-servers: localhost:9092
   datasource:
     url: jdbc:postgresql://localhost:5435/ecommerce-cart
     password: secret
