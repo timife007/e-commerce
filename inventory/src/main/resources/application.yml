@@ -2,9 +2,6 @@ server:
   port: 8082
 
 spring:
-  docker:
-    compose:
-      file: ./inventory/docker-compose.yml
 #  profiles:
 #    active: production
   datasource:

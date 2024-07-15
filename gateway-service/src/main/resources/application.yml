@@ -16,7 +16,10 @@ spring:
   main:
     web-application-type: reactive
   kafka:
-    bootstrap-servers: localhost:9092
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
   cloud:
     gateway:
       routes:

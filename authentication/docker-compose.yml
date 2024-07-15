@@ -7,8 +7,6 @@ services:
       - ../env/auth.env
     ports:
       - "5433:5432"
-    networks:
-      - kafka-network
   pgadmin:
     container_name: auth-pgadmin
     image: dpage/pgadmin4
@@ -17,9 +15,3 @@ services:
     ports:
       - "5050:80"
     restart: unless-stopped
-    networks:
-      - kafka-network
-
-networks:
-  kafka-network:
-    external: true
