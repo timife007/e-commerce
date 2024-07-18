@@ -22,6 +22,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class CartServiceImpl implements CartService {
     private InventoryFeignClient inventoryFeignClient;
 
     @Autowired
+//    @LoadBalanced
     private AuthFeignClient authFeignClient;
 
 
@@ -138,11 +140,14 @@ public class CartServiceImpl implements CartService {
         List<DeliveryAddressDto> addressDtoList = authFeignClient.getUserAddresses(userId).getBody();
         Double deliveryFee = 30.0;
         Double totalFee = deliveryFee + cart.getSubTotal();
+        cart.setSumTotal(totalFee);
+        cart.setDeliveryFee(deliveryFee);
+        cartRepository.save(cart);
         return CheckoutResponse.builder()
                 .userId(Long.valueOf(userId))
                 .orderItems(cart.getOrderItems())
                 .subTotal(cart.getSubTotal())
-                .deliveryFee(20.0)  //delivery fee depending the default address.
+                .deliveryFee(deliveryFee)  //delivery fee depending the default address.
                 .sumTotal(totalFee)
                 .deliveryAddressDto(addressDtoList)
                 .build();
@@ -154,7 +159,7 @@ public class CartServiceImpl implements CartService {
             Cart cart = cartRepository.findByUserId(userId);
             Order newOrder = Order.builder().orderStatus(OrderStatus.ORDER_SUCCESSFUL).cart(cart).build();
             Order order = orderRepository.save(newOrder);
-            cartRepository.deleteById(userId);
+//            cartRepository.deleteById(userId);
             OrderResponse orderResponse = OrderResponse
                     .builder()
                     .id(order.getId())
@@ -162,6 +167,7 @@ public class CartServiceImpl implements CartService {
                     .orderStatus(order.getOrderStatus())
                     .subTotal(order.getCart().getSubTotal())
                     .sumTotal(order.getCart().getSumTotal())
+                    .deliveryFee(order.getCart().getDeliveryFee())
                     .build();
             //Send topic to kafka to signal order successfully placed.
             //fix delivery fee.

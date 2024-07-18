@@ -27,8 +27,9 @@ public class TokenPublishedListener {
         log.info("Received Token: {}", token);
         try {
 //            final Map<String, Object> payload = readJsonAsMap(token);
-            String validate = authenticationService.validateToken(token);
-            log.error(validate);
+//            String validate = authenticationService.validateToken(token);
+//            log.error(validate);
+            log.info("This is a kafka listener");
         } catch (Exception exception) {
             log.error("Invalid validation: {}", exception.getLocalizedMessage());
             throw new IllegalArgumentException(exception.getLocalizedMessage());

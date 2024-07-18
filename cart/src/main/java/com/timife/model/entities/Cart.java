@@ -23,6 +23,7 @@ public class  Cart {
     private Long userId;
     private Double subTotal;
     private Double sumTotal = 0.0;
+    private Double deliveryFee = 0.0;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)

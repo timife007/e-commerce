@@ -58,8 +58,7 @@ public class CartController {
     @PostMapping("confirmOrder/{userId}")
     public ResponseEntity<?> confirmOrder(@PathVariable("userId") Long userId) {
         try {
-
-            return ResponseEntity.ok("Order successfully places");
+            return ResponseEntity.ok(cartService.confirmOrder(userId));
         } catch (Exception e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }

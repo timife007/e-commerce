@@ -14,6 +14,8 @@ spring:
     url: jdbc:postgresql://localhost:5436/ecommerce-payment
     password: secret
     username: timife
+  profiles:
+    active: production
   jpa:
     hibernate:
       ddl-auto: create-drop

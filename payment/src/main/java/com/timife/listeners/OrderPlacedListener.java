@@ -21,10 +21,12 @@ public class OrderPlacedListener {
     @KafkaListener(id = "order", topics = "order.published")
     public String listens(final String order) {
         log.info("Received Token: {}", order);
+        log.error(order);
         try {
             OrderResponse item = objectMapper.readValue(order, OrderResponse.class);
-            String validate = paymentService.paymentApproved(item);
+            String orderStatus = paymentService.paymentApproved(item);
             log.error(item.toString());
+            log.error(orderStatus);
         } catch (Exception exception) {
             log.error("Invalid validation: {}", exception.getLocalizedMessage());
             throw new IllegalArgumentException(exception.getLocalizedMessage());

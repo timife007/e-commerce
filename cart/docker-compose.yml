@@ -6,8 +6,6 @@ services:
       - ../env/cart.env
     ports:
       - "5435:5432"
-    networks:
-      - kafka-network
   pgadmin:
     container_name: pgadmin-cart
     image: dpage/pgadmin4

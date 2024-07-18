@@ -58,8 +58,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     //However, if auth service should go down, I might not be able to proceed
                     //Issue is with the service communication.
 //                    restTemplate.getForObject("http://AUTHENTICATION/auth/validate/{token}", String.class, authHeader);
-//                    jwtUtil.validateToken(authHeader);
-                    tokenPublisherService.publish(authHeader);
+                    jwtUtil.validateToken(authHeader);
+//                    tokenPublisherService.publish(authHeader);
 //                    authFeignClient.validateToken(authHeader);
                 } catch (Exception e) {
                     System.out.println("invalid token access...");
