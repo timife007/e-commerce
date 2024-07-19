@@ -5,15 +5,9 @@ order:
     topic: order.published
 
 spring:
+  profiles:
+    active: production
   cloud:
-#    discovery:
-#      client:
-#        simple:
-#          instances:
-#            INVENTORY[0]:
-#              uri: http://INVENTORY
-#            AUTHENTICATION[0]:
-#              uri: https://AUTHENTICATION
     loadbalancer:
       enabled: true
   docker:

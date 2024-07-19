@@ -1,41 +1,38 @@
 package com.timife.listeners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.timife.model.OrderResponse;
-import com.timife.services.PaymentService;
+import com.timife.model.responses.OrderResponse;
+import com.timife.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-
-/**
- * Order placed in cart listener to perform payment transaction
- */
 
 @Component
 @Profile("production")
 @RequiredArgsConstructor
 @Slf4j
-public class OrderPlacedListener {
+public class PaymentStatusListener {
     private final ObjectMapper objectMapper;
 
-    private final PaymentService paymentService;
+    @Autowired
+    private OrderRepository orderRepository;
 
-    @KafkaListener(id = "order", topics = "order.published")
-    public String listens(final String order) {
-        log.info("Received Token: {}", order);
-        log.error(order);
+    @KafkaListener(id = "payment", topics = "payment.published")
+    public String listens(final String paymentOrder) {
+        log.info("Received Status: {}", paymentOrder);
+        log.error(paymentOrder);
         try {
-            OrderResponse item = objectMapper.readValue(order, OrderResponse.class);
-            String orderStatus = paymentService.makePayment(item);
+            OrderResponse item = objectMapper.readValue(paymentOrder, OrderResponse.class);
+            //Update order db of status and do as expected and also update the inventory db accordingly.
             log.error(item.toString());
-            log.error(orderStatus);
         } catch (Exception exception) {
             log.error("Invalid validation: {}", exception.getLocalizedMessage());
             throw new IllegalArgumentException(exception.getLocalizedMessage());
         }
-        return order;
+        return paymentOrder;
     }
 
 }

@@ -128,17 +128,12 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public String setDeliveryFeeBasedOn(String address) {
-        //TODO: Add a new delivery address if needed to the specific user
-        //use the last index address as the default for each user.
-        return null;
-    }
-
-    @Override
     public CheckoutResponse checkout(Integer userId) {
         Cart cart = cartRepository.findByUserId(Long.valueOf(userId));
         List<DeliveryAddressDto> addressDtoList = authFeignClient.getUserAddresses(userId).getBody();
-        Double deliveryFee = 30.0;
+        assert addressDtoList != null;
+        DeliveryAddressDto deliveryAddressDto = addressDtoList.stream().filter(DeliveryAddressDto::getIsDefault).findFirst().orElse(null);
+        Double deliveryFee = setDeliveryFeeBasedOn(deliveryAddressDto);
         Double totalFee = deliveryFee + cart.getSubTotal();
         cart.setSumTotal(totalFee);
         cart.setDeliveryFee(deliveryFee);
@@ -152,6 +147,7 @@ public class CartServiceImpl implements CartService {
                 .deliveryAddressDto(addressDtoList)
                 .build();
     }
+
 
     @Override
     public String confirmOrder(Long userId) {
@@ -188,6 +184,20 @@ public class CartServiceImpl implements CartService {
                 .unitPrice(productSize.getPrice())
                 .cart(cart)
                 .build();
+    }
+
+    private Double setDeliveryFeeBasedOn(DeliveryAddressDto deliveryAddressDto) {
+        //TODO: Add a new delivery address if needed to the specific user
+        //use the last index address as the default for each user.
+        double deliveryFee = 0;
+        if (deliveryAddressDto != null) {
+            if (deliveryAddressDto.getCountry().equals("USA")) {
+                deliveryFee = 10.0;
+            } else {
+                deliveryFee = 30.0;
+            }
+        }
+        return deliveryFee;
     }
 }
 

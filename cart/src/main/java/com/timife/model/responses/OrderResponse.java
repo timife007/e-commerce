@@ -18,5 +18,5 @@ public class OrderResponse {
     private Double subTotal;
     private Double deliveryFee;
     private Double sumTotal = 0.0;
-    private OrderStatus orderStatus;
+    private OrderStatus orderStatus = OrderStatus.ORDER_IN_PROGRESS;
 }

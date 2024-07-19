@@ -1,5 +1,6 @@
 package com.timife.services;
 
+import com.timife.model.dtos.DeliveryAddressDto;
 import com.timife.model.dtos.OrderItemDto;
 import com.timife.model.dtos.UpdateOrderItemDto;
 import com.timife.model.entities.Cart;
@@ -12,8 +13,6 @@ public interface CartService {
     public Cart findCartById(Long userId);
 
     public Cart updateOrder(UpdateOrderItemDto updateOrderItemDto);
-
-    public String setDeliveryFeeBasedOn(String address);
 
     public CheckoutResponse checkout(Integer userId);
 

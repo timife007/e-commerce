@@ -2,8 +2,8 @@ server:
   port: 8082
 
 spring:
-#  profiles:
-#    active: production
+  profiles:
+    active: production
   datasource:
     url: jdbc:postgresql://localhost:5434/ecommerce-inventory
     password: secret
