@@ -22,19 +22,17 @@ public class PaymentServiceImpl implements PaymentService {
     private PaymentRepository paymentRepository;
 
     @Override
-    public String makePayment(OrderResponse orderResponse) {
+    public void makePayment(OrderResponse orderResponse) {
         try {
             //Make payment here
             orderResponse.setOrderStatus(OrderStatus.ORDER_SUCCESSFUL);
             //publish payment status with the orderResponse as successful.
             paymentStatusPublishService.publish(orderResponse);
-            log.error(orderResponse.toString());
-            return OrderStatus.ORDER_SUCCESSFUL.name();
+            return;
         } catch (Exception exception) {
             orderResponse.setOrderStatus(OrderStatus.ORDER_FAILED);
             paymentStatusPublishService.publish(orderResponse);
-            log.error(orderResponse.toString());
-            return OrderStatus.ORDER_FAILED.name();
+            log.debug(exception.getLocalizedMessage());
         }
     }
 }

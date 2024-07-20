@@ -4,5 +4,5 @@ import com.timife.model.OrderResponse;
 
 public interface PaymentService {
 
-    String makePayment(OrderResponse orderResponse);
+    void makePayment(OrderResponse orderResponse);
 }

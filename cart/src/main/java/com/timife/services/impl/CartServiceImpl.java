@@ -21,6 +21,7 @@ import com.timife.services.OrderPublisherService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Service;
@@ -153,7 +154,7 @@ public class CartServiceImpl implements CartService {
     public String confirmOrder(Long userId) {
         try {
             Cart cart = cartRepository.findByUserId(userId);
-            Order newOrder = Order.builder().orderStatus(OrderStatus.ORDER_SUCCESSFUL).cart(cart).build();
+            Order newOrder = Order.builder().orderStatus(OrderStatus.ORDER_IN_PROGRESS).cart(cart).build();
             Order order = orderRepository.save(newOrder);
 //            cartRepository.deleteById(userId);
             OrderResponse orderResponse = OrderResponse
@@ -167,9 +168,23 @@ public class CartServiceImpl implements CartService {
                     .build();
             //Send topic to kafka to signal order successfully placed.
             //fix delivery fee.
-            orderPublisherService.publish(orderResponse);
+            orderPublisherService.publishOrder(orderResponse);
             return "Order successfully placed";
         } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+    }
+
+    @Override
+    public void updateInventory(OrderResponse orderResponse) {
+        try{
+            log.error("USER ID ERROR: {}", orderResponse.getUserId().toString());
+            List<OrderItem> orderItems = cartRepository.findByUserId(orderResponse.getUserId()).getOrderItems();
+            Hibernate.initialize(orderItems);
+            log.error(orderItems.toString());
+        orderPublisherService.publishCompletedOrder(orderItems);  //errors
+//        log.error(order.toString())
+        }catch (Exception e){
             throw new RuntimeException(e.getLocalizedMessage());
         }
     }

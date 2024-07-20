@@ -23,6 +23,7 @@ public class TokenPublisherServiceImpl implements TokenPublisherService {
     @Override
     public void publish(String token) {
         try {
+            
 //            final String payload = objectMapper.writeValueAsString(token);
             kafkaTemplate.send(kafkaConfigProps.getTopic(), token);
             log.info("PUBLISHED: " + token);

@@ -28,9 +28,7 @@ public class OrderPlacedListener {
         log.error(order);
         try {
             OrderResponse item = objectMapper.readValue(order, OrderResponse.class);
-            String orderStatus = paymentService.makePayment(item);
-            log.error(item.toString());
-            log.error(orderStatus);
+            paymentService.makePayment(item);
         } catch (Exception exception) {
             log.error("Invalid validation: {}", exception.getLocalizedMessage());
             throw new IllegalArgumentException(exception.getLocalizedMessage());

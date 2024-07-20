@@ -3,12 +3,15 @@ package com.timife.services.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.timife.config.KafkaConfigProps;
 import com.timife.model.entities.Order;
+import com.timife.model.entities.OrderItem;
 import com.timife.model.responses.OrderResponse;
 import com.timife.services.OrderPublisherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -21,7 +24,7 @@ public class OrderPublisherServiceImpl implements OrderPublisherService {
 
     private final KafkaConfigProps kafkaConfigProps;
     @Override
-    public void publish(OrderResponse order) {
+    public void publishOrder(OrderResponse order) {
         try {
             final String payload = objectMapper.writeValueAsString(order);
             kafkaTemplate.send(kafkaConfigProps.getTopic(), payload);
@@ -30,4 +33,17 @@ public class OrderPublisherServiceImpl implements OrderPublisherService {
             throw new RuntimeException("Unable to publish order");
         }
     }
+
+    @Override
+    public void publishCompletedOrder(List<OrderItem> orderItems) {
+        try {
+            final String payload = objectMapper.writeValueAsString(orderItems);
+            kafkaTemplate.send("placedOrder.published", payload);
+            log.info("PUBLISHED: " + payload);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to publish order");
+        }
+    }
+
+
 }

@@ -22,11 +22,9 @@ public class OrderStatusListener {
 
     @KafkaListener(id = "placedOrder", topics = "placedOrder.published")
     public String listens(final String updatedOrder) {
-        log.info("Received Status: {}", updatedOrder);
-        log.error(updatedOrder);
         try {
             //Update inventory db of successful order placed and do as expected.
-            log.info(updatedOrder);
+            log.info("Received Status: {}", updatedOrder);
         } catch (Exception exception) {
             log.error("Invalid validation: {}", exception.getLocalizedMessage());
             throw new IllegalArgumentException(exception.getLocalizedMessage());

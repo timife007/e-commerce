@@ -26,6 +26,6 @@ public class  Cart {
     private Double deliveryFee = 0.0;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "cart", cascade = CascadeType.ALL)
     List<OrderItem> orderItems = new ArrayList<>();
 }
