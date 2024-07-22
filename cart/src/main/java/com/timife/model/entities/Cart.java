@@ -19,13 +19,12 @@ import java.util.List;
 public class  Cart {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
     private Double subTotal;
     private Double sumTotal = 0.0;
     private Double deliveryFee = 0.0;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "cart", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     List<OrderItem> orderItems = new ArrayList<>();
 }

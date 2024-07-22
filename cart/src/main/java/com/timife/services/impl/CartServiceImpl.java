@@ -2,10 +2,7 @@ package com.timife.services.impl;
 
 import com.timife.feign.AuthFeignClient;
 import com.timife.feign.InventoryFeignClient;
-import com.timife.model.dtos.DeliveryAddressDto;
-import com.timife.model.dtos.OrderItemDto;
-import com.timife.model.dtos.ReserveOrderItemDto;
-import com.timife.model.dtos.UpdateOrderItemDto;
+import com.timife.model.dtos.*;
 import com.timife.model.entities.Cart;
 import com.timife.model.entities.Order;
 import com.timife.model.entities.OrderItem;
@@ -27,6 +24,7 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -68,6 +66,7 @@ public class CartServiceImpl implements CartService {
             if (orderItem != null) {
                 orderItem.setQty(orderItem.getQty() + 1);
                 orderItem.setTotalPrice(orderItem.getTotalPrice() + productSize.getPrice());
+                orderItem.setCart(presentCart);
                 presentCart.setSubTotal(currentTotal + productSize.getPrice());
                 presentCart.getOrderItems().add(orderItem);
                 return cartRepository.save(presentCart);
@@ -156,7 +155,6 @@ public class CartServiceImpl implements CartService {
             Cart cart = cartRepository.findByUserId(userId);
             Order newOrder = Order.builder().orderStatus(OrderStatus.ORDER_IN_PROGRESS).cart(cart).build();
             Order order = orderRepository.save(newOrder);
-//            cartRepository.deleteById(userId);
             OrderResponse orderResponse = OrderResponse
                     .builder()
                     .id(order.getId())
@@ -176,15 +174,24 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional
     public void updateInventory(OrderResponse orderResponse) {
-        try{
+        try {
             log.error("USER ID ERROR: {}", orderResponse.getUserId().toString());
-            List<OrderItem> orderItems = cartRepository.findByUserId(orderResponse.getUserId()).getOrderItems();
-            Hibernate.initialize(orderItems);
-            log.error(orderItems.toString());
-        orderPublisherService.publishCompletedOrder(orderItems);  //errors
+            List<PurchasedOrderItemDto> purchasedOrderItemDtos = cartRepository
+                    .findByUserId(orderResponse.getUserId())
+                    .getOrderItems().stream()
+                    .map((orderItem -> PurchasedOrderItemDto.builder()
+                            .cartId(orderItem.getId())
+                            .qty(orderItem.getQty())
+                            .productId(orderItem.getProductId())
+                            .sizeId(orderItem.getSizeId())
+                            .productSizeId(orderItem.getProductSizeId())
+                            .id(orderItem.getId()).build())).toList();
+            log.error("Approved Order: {}", purchasedOrderItemDtos);
+            orderPublisherService.publishCompletedOrder(purchasedOrderItemDtos);  //errors
 //        log.error(order.toString())
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }
     }
