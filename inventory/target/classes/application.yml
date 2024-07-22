@@ -1,9 +1,10 @@
 server:
   port: 8082
 
+
 spring:
-#  profiles:
-#    active: production
+  profiles:
+    active: production
   datasource:
     url: jdbc:postgresql://localhost:5434/ecommerce-inventory
     password: secret
@@ -16,6 +17,8 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
+  kafka:
+    bootstrap-servers: localhost:9092
   application:
     name: inventory
 #eureka:

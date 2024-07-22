@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "order.kafka")
+@ConfigurationProperties(prefix = "payment.kafka")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

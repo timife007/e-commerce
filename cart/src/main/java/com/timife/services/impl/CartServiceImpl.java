@@ -2,10 +2,7 @@ package com.timife.services.impl;
 
 import com.timife.feign.AuthFeignClient;
 import com.timife.feign.InventoryFeignClient;
-import com.timife.model.dtos.DeliveryAddressDto;
-import com.timife.model.dtos.OrderItemDto;
-import com.timife.model.dtos.ReserveOrderItemDto;
-import com.timife.model.dtos.UpdateOrderItemDto;
+import com.timife.model.dtos.*;
 import com.timife.model.entities.Cart;
 import com.timife.model.entities.Order;
 import com.timife.model.entities.OrderItem;
@@ -21,11 +18,13 @@ import com.timife.services.OrderPublisherService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +66,7 @@ public class CartServiceImpl implements CartService {
             if (orderItem != null) {
                 orderItem.setQty(orderItem.getQty() + 1);
                 orderItem.setTotalPrice(orderItem.getTotalPrice() + productSize.getPrice());
+                orderItem.setCart(presentCart);
                 presentCart.setSubTotal(currentTotal + productSize.getPrice());
                 presentCart.getOrderItems().add(orderItem);
                 return cartRepository.save(presentCart);
@@ -128,17 +128,12 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public String setDeliveryFeeBasedOn(String address) {
-        //TODO: Add a new delivery address if needed to the specific user
-        //use the last index address as the default for each user.
-        return null;
-    }
-
-    @Override
     public CheckoutResponse checkout(Integer userId) {
         Cart cart = cartRepository.findByUserId(Long.valueOf(userId));
         List<DeliveryAddressDto> addressDtoList = authFeignClient.getUserAddresses(userId).getBody();
-        Double deliveryFee = 30.0;
+        assert addressDtoList != null;
+        DeliveryAddressDto deliveryAddressDto = addressDtoList.stream().filter(DeliveryAddressDto::getIsDefault).findFirst().orElse(null);
+        Double deliveryFee = setDeliveryFeeBasedOn(deliveryAddressDto);
         Double totalFee = deliveryFee + cart.getSubTotal();
         cart.setSumTotal(totalFee);
         cart.setDeliveryFee(deliveryFee);
@@ -153,13 +148,13 @@ public class CartServiceImpl implements CartService {
                 .build();
     }
 
+
     @Override
     public String confirmOrder(Long userId) {
         try {
             Cart cart = cartRepository.findByUserId(userId);
-            Order newOrder = Order.builder().orderStatus(OrderStatus.ORDER_SUCCESSFUL).cart(cart).build();
+            Order newOrder = Order.builder().orderStatus(OrderStatus.ORDER_IN_PROGRESS).cart(cart).build();
             Order order = orderRepository.save(newOrder);
-//            cartRepository.deleteById(userId);
             OrderResponse orderResponse = OrderResponse
                     .builder()
                     .id(order.getId())
@@ -171,8 +166,31 @@ public class CartServiceImpl implements CartService {
                     .build();
             //Send topic to kafka to signal order successfully placed.
             //fix delivery fee.
-            orderPublisherService.publish(orderResponse);
+            orderPublisherService.publishOrder(orderResponse);
             return "Order successfully placed";
+        } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateInventory(OrderResponse orderResponse) {
+        try {
+            log.error("USER ID ERROR: {}", orderResponse.getUserId().toString());
+            List<PurchasedOrderItemDto> purchasedOrderItemDtos = cartRepository
+                    .findByUserId(orderResponse.getUserId())
+                    .getOrderItems().stream()
+                    .map((orderItem -> PurchasedOrderItemDto.builder()
+                            .cartId(orderItem.getId())
+                            .qty(orderItem.getQty())
+                            .productId(orderItem.getProductId())
+                            .sizeId(orderItem.getSizeId())
+                            .productSizeId(orderItem.getProductSizeId())
+                            .id(orderItem.getId()).build())).toList();
+            log.error("Approved Order: {}", purchasedOrderItemDtos);
+            orderPublisherService.publishCompletedOrder(purchasedOrderItemDtos);  //errors
+//        log.error(order.toString())
         } catch (Exception e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }
@@ -188,6 +206,20 @@ public class CartServiceImpl implements CartService {
                 .unitPrice(productSize.getPrice())
                 .cart(cart)
                 .build();
+    }
+
+    private Double setDeliveryFeeBasedOn(DeliveryAddressDto deliveryAddressDto) {
+        //TODO: Add a new delivery address if needed to the specific user
+        //use the last index address as the default for each user.
+        double deliveryFee = 0;
+        if (deliveryAddressDto != null) {
+            if (deliveryAddressDto.getCountry().equals("USA")) {
+                deliveryFee = 10.0;
+            } else {
+                deliveryFee = 30.0;
+            }
+        }
+        return deliveryFee;
     }
 }
 

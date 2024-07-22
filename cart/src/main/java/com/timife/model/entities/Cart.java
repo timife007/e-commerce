@@ -19,7 +19,6 @@ import java.util.List;
 public class  Cart {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
     private Double subTotal;
     private Double sumTotal = 0.0;

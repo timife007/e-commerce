@@ -1,32 +1,29 @@
-package com.timife.services.kafka.impl;
+package com.timife.services.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.timife.config.KafkaConfigProps;
-import com.timife.services.kafka.TokenPublisherService;
+import com.timife.model.OrderResponse;
+import com.timife.services.PaymentStatusPublishService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
-public class TokenPublisherServiceImpl implements TokenPublisherService {
-
+public class PaymentStatusPublishServiceImpl implements PaymentStatusPublishService {
     private final ObjectMapper objectMapper;
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     private final KafkaConfigProps kafkaConfigProps;
-
     @Override
-    public void publish(String token) {
+    public void publish(OrderResponse order) {
         try {
-            
-//            final String payload = objectMapper.writeValueAsString(token);
-            kafkaTemplate.send(kafkaConfigProps.getTopic(), token);
-            log.info("PUBLISHED: " + token);
+            final String payload = objectMapper.writeValueAsString(order);
+            kafkaTemplate.send(kafkaConfigProps.getTopic(), payload);
+            log.info("PUBLISHED: " + order.toString());
         } catch (Exception e) {
             throw new RuntimeException("Unable to publish token");
         }
