@@ -8,6 +8,8 @@ import com.timife.model.entities.OrderItem;
 import com.timife.model.responses.CheckoutResponse;
 import com.timife.model.responses.OrderResponse;
 
+import java.util.List;
+
 public interface CartService {
     public Cart selectOrder(OrderItemDto orderItemDto);
 
@@ -20,4 +22,6 @@ public interface CartService {
     public String confirmOrder(Long userId);
 
     public void updateInventory(OrderResponse orderResponse);
+
+    public List<OrderItem> getOrderItems(Long userId);
 }
