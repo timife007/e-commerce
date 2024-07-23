@@ -177,12 +177,19 @@ public class ProductServiceImpl implements ProductService {
                             productSizeRepository.save(product);
                         }
                 );
+            } else if (purchasedOrder.getOrderStatus() == OrderStatus.ORDER_SUCCESSFUL) {
+                purchasedOrder.getPurchasedOrderItemDtoList().forEach((item) -> {
+                            ProductSize product = productSizeRepository.findById(item.getProductSizeId()).orElseThrow();
+                            product.setReserved(product.getReserved() - item.getQty());
+                            productSizeRepository.save(product);
+                        }
+                );
             }
             return "Successfully updated";
+
         }catch (Exception e){
             throw new RuntimeException(e.getLocalizedMessage());
         }
-
     }
 
     @Override
