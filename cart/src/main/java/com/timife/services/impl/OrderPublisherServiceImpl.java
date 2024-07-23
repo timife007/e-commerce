@@ -2,7 +2,8 @@ package com.timife.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.timife.config.KafkaConfigProps;
-import com.timife.model.dtos.PurchasedOrderItemDto;
+import com.timife.model.dtos.completed_order_dtos.PurchasedOrder;
+import com.timife.model.dtos.completed_order_dtos.PurchasedOrderItemDto;
 import com.timife.model.responses.OrderResponse;
 import com.timife.services.OrderPublisherService;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +35,9 @@ public class OrderPublisherServiceImpl implements OrderPublisherService {
     }
 
     @Override
-    public void publishCompletedOrder(List<PurchasedOrderItemDto> purchasedItems) {
+    public void publishCompletedOrder(PurchasedOrder purchasedOrder) {
         try {
-            final String payload = objectMapper.writeValueAsString(purchasedItems);
+            final String payload = objectMapper.writeValueAsString(purchasedOrder);
             kafkaTemplate.send("placedOrder.published", payload);
             log.info("PLACED_ORDER PUBLISHED: " + payload);
         } catch (Exception e) {
