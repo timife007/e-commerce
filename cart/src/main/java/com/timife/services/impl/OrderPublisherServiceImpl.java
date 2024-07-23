@@ -3,8 +3,6 @@ package com.timife.services.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.timife.config.KafkaConfigProps;
 import com.timife.model.dtos.PurchasedOrderItemDto;
-import com.timife.model.entities.Order;
-import com.timife.model.entities.OrderItem;
 import com.timife.model.responses.OrderResponse;
 import com.timife.services.OrderPublisherService;
 import lombok.RequiredArgsConstructor;

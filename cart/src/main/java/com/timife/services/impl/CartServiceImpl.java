@@ -4,9 +4,10 @@ import com.timife.feign.AuthFeignClient;
 import com.timife.feign.InventoryFeignClient;
 import com.timife.model.dtos.*;
 import com.timife.model.entities.Cart;
-import com.timife.model.entities.Order;
+import com.timife.model.entities.orders.Order;
 import com.timife.model.entities.OrderItem;
 import com.timife.model.entities.OrderStatus;
+import com.timife.model.entities.orders.OrderedItem;
 import com.timife.model.responses.CheckoutResponse;
 import com.timife.model.responses.OrderResponse;
 import com.timife.model.responses.ProductSizeResponse;
@@ -18,13 +19,10 @@ import com.timife.services.OrderPublisherService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -130,6 +128,9 @@ public class CartServiceImpl implements CartService {
     @Override
     public CheckoutResponse checkout(Integer userId) {
         Cart cart = cartRepository.findByUserId(Long.valueOf(userId));
+        if(cart == null){
+            throw new RuntimeException("Cart is empty");
+        }
         List<DeliveryAddressDto> addressDtoList = authFeignClient.getUserAddresses(userId).getBody();
         assert addressDtoList != null;
         DeliveryAddressDto deliveryAddressDto = addressDtoList.stream().filter(DeliveryAddressDto::getIsDefault).findFirst().orElse(null);
@@ -153,20 +154,37 @@ public class CartServiceImpl implements CartService {
     public String confirmOrder(Long userId) {
         try {
             Cart cart = cartRepository.findByUserId(userId);
-            Order newOrder = Order.builder().orderStatus(OrderStatus.ORDER_IN_PROGRESS).cart(cart).build();
+            Order newOrder = Order.builder()
+                    .orderStatus(OrderStatus.ORDER_IN_PROGRESS)
+                    .userId(cart.getUserId())
+                    .orderedItemList(cart.getOrderItems()
+                            .stream().map((item) -> OrderedItem.builder()
+                                    .id(item.getId())
+                                    .totalPrice(item.getTotalPrice())
+                                    .unitPrice(item.getUnitPrice())
+                                    .qty(item.getQty())
+                                    .sizeId(item.getSizeId())
+                                    .productId(item.getProductId())
+                                    .productSizeId(item.getProductSizeId())
+                                    .build()
+                            ).toList())
+                    .deliveryFee(cart.getDeliveryFee())
+                    .sumTotal(cart.getSumTotal())
+                    .build();
+
             Order order = orderRepository.save(newOrder);
             OrderResponse orderResponse = OrderResponse
                     .builder()
                     .id(order.getId())
-                    .userId(order.getCart().getUserId())
+                    .userId(order.getUserId())
                     .orderStatus(order.getOrderStatus())
-                    .subTotal(order.getCart().getSubTotal())
-                    .sumTotal(order.getCart().getSumTotal())
-                    .deliveryFee(order.getCart().getDeliveryFee())
+                    .sumTotal(order.getSumTotal())
+                    .deliveryFee(order.getDeliveryFee())
                     .build();
             //Send topic to kafka to signal order successfully placed.
             //fix delivery fee.
             orderPublisherService.publishOrder(orderResponse);
+            //cart should be deleted after confirming order
             return "Order successfully placed";
         } catch (Exception e) {
             throw new RuntimeException(e.getLocalizedMessage());
@@ -190,10 +208,16 @@ public class CartServiceImpl implements CartService {
                             .id(orderItem.getId()).build())).toList();
             log.error("Approved Order: {}", purchasedOrderItemDtos);
             orderPublisherService.publishCompletedOrder(purchasedOrderItemDtos);  //errors
-//        log.error(order.toString())
+            //After sending completed or failed order, delete cart and items to refresh
+            cartRepository.deleteById(orderResponse.getUserId());
         } catch (Exception e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }
+    }
+
+    @Override
+    public List<OrderItem> getOrderItems(Long userId) {
+        return orderItemRepository.findAll().stream().filter((orderItem -> orderItem.getCart().getUserId().equals(userId))).toList();
     }
 
     public OrderItem getOrderItem(ProductSizeResponse productSize, OrderItemDto orderItemDto, Cart cart) {

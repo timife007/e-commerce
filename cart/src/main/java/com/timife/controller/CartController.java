@@ -63,4 +63,13 @@ public class CartController {
             throw new RuntimeException(e.getLocalizedMessage());
         }
     }
+
+    @GetMapping("orderItems/{id}")
+    public ResponseEntity<?> getAllOrders(@PathVariable("id") Long userId) {
+        try {
+            return ResponseEntity.ok(cartService.getOrderItems(userId));
+        } catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+    }
 }
