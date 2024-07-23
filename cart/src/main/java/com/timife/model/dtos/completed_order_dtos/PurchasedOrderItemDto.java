@@ -1,4 +1,4 @@
-package com.timife.model.dtos;
+package com.timife.model.dtos.completed_order_dtos;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * data object of each order item that has been completed, either failed or successful.
+ */
 @Builder
 @Data
 @AllArgsConstructor

@@ -3,6 +3,7 @@ package com.timife.services;
 import com.timife.model.dtos.ProductRequest;
 import com.timife.model.dtos.ReserveOrderItemDto;
 import com.timife.model.dtos.SelectOrderDto;
+import com.timife.model.dtos.completed_order_dtos.PurchasedOrder;
 import com.timife.model.entities.Image;
 import com.timife.model.entities.Product;
 import com.timife.model.entities.ProductSize;
@@ -37,4 +38,6 @@ public interface ProductService {
     public ProductSizeResponse selectOrderRequest(SelectOrderDto selectOrderDto);
 
     public boolean reserve(ReserveOrderItemDto orderItems);
+
+    public String updateInventory(PurchasedOrder purchasedOrder);
 }

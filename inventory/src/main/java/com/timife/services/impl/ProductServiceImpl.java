@@ -1,8 +1,10 @@
 package com.timife.services.impl;
 
+import com.timife.model.dtos.OrderStatus;
 import com.timife.model.dtos.ProductRequest;
 import com.timife.model.dtos.ReserveOrderItemDto;
 import com.timife.model.dtos.SelectOrderDto;
+import com.timife.model.dtos.completed_order_dtos.PurchasedOrder;
 import com.timife.model.entities.*;
 import com.timife.model.responses.ProductResponse;
 import com.timife.model.responses.ProductSizeResponse;
@@ -162,6 +164,25 @@ public class ProductServiceImpl implements ProductService {
         productSize.setQtyInStock(qtyInStock - orderItem.getQty());
         productSizeRepository.save(productSize);
         return true;
+    }
+
+    @Override
+    public String updateInventory(PurchasedOrder purchasedOrder) {
+        try{
+            if (purchasedOrder.getOrderStatus() == OrderStatus.ORDER_FAILED) {
+                purchasedOrder.getPurchasedOrderItemDtoList().forEach((item) -> {
+                            ProductSize product = productSizeRepository.findById(item.getProductSizeId()).orElseThrow();
+                            product.setQtyInStock(product.getQtyInStock() + item.getQty());
+                            product.setReserved(product.getReserved() - item.getQty());
+                            productSizeRepository.save(product);
+                        }
+                );
+            }
+            return "Successfully updated";
+        }catch (Exception e){
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+
     }
 
     @Override

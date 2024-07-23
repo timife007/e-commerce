@@ -3,6 +3,8 @@ package com.timife.services.impl;
 import com.timife.feign.AuthFeignClient;
 import com.timife.feign.InventoryFeignClient;
 import com.timife.model.dtos.*;
+import com.timife.model.dtos.completed_order_dtos.PurchasedOrder;
+import com.timife.model.dtos.completed_order_dtos.PurchasedOrderItemDto;
 import com.timife.model.entities.Cart;
 import com.timife.model.entities.orders.Order;
 import com.timife.model.entities.OrderItem;
@@ -128,7 +130,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public CheckoutResponse checkout(Integer userId) {
         Cart cart = cartRepository.findByUserId(Long.valueOf(userId));
-        if(cart == null){
+        if (cart == null) {
             throw new RuntimeException("Cart is empty");
         }
         List<DeliveryAddressDto> addressDtoList = authFeignClient.getUserAddresses(userId).getBody();
@@ -206,8 +208,13 @@ public class CartServiceImpl implements CartService {
                             .sizeId(orderItem.getSizeId())
                             .productSizeId(orderItem.getProductSizeId())
                             .id(orderItem.getId()).build())).toList();
-            log.error("Approved Order: {}", purchasedOrderItemDtos);
-            orderPublisherService.publishCompletedOrder(purchasedOrderItemDtos);  //errors
+            PurchasedOrder purchasedOrder = PurchasedOrder
+                    .builder()
+                    .orderStatus(orderResponse.getOrderStatus())
+                    .purchasedOrderItemDtoList(purchasedOrderItemDtos)
+                    .build();
+            log.error("Approved Order: {}", purchasedOrder);
+            orderPublisherService.publishCompletedOrder(purchasedOrder);  //errors
             //After sending completed or failed order, delete cart and items to refresh
             cartRepository.deleteById(orderResponse.getUserId());
         } catch (Exception e) {
