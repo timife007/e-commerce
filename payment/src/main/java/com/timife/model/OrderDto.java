@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderResponse {
+public class OrderDto {
 
     private Long id;
     private Long userId;

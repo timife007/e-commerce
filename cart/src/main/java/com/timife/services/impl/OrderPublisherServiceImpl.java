@@ -30,7 +30,7 @@ public class OrderPublisherServiceImpl implements OrderPublisherService {
             kafkaTemplate.send(kafkaConfigProps.getTopic(), payload);
             log.info("PUBLISHED: " + order.toString());
         } catch (Exception e) {
-            throw new RuntimeException("Unable to publish order");
+            throw new RuntimeException("Unable to process order");
         }
     }
 

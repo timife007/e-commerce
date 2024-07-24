@@ -1,8 +1,8 @@
 package com.timife.services;
 
-import com.timife.model.OrderResponse;
+import com.timife.model.OrderDto;
 
 public interface PaymentStatusPublishService {
 
-    void publish(OrderResponse order);
+    void publish(OrderDto order);
 }
