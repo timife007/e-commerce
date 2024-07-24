@@ -168,7 +168,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String updateInventory(PurchasedOrder purchasedOrder) {
-        try{
+        try {
             if (purchasedOrder.getOrderStatus() == OrderStatus.ORDER_FAILED) {
                 purchasedOrder.getPurchasedOrderItemDtoList().forEach((item) -> {
                             ProductSize product = productSizeRepository.findById(item.getProductSizeId()).orElseThrow();
@@ -186,8 +186,7 @@ public class ProductServiceImpl implements ProductService {
                 );
             }
             return "Successfully updated";
-
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }
     }
@@ -200,7 +199,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse getProduct(Long id) {
         Product savedProduct = productRepository.findById(id).orElseThrow(() -> new RuntimeException("product not found"));
-
         return ProductResponse.builder()
                 .id(savedProduct.getId())
                 .name(savedProduct.getName())
@@ -208,8 +206,7 @@ public class ProductServiceImpl implements ProductService {
                 .productCode(savedProduct.getProductCode())
                 .productDetails(savedProduct.getProductDescription())
                 .categoryId(savedProduct.getCategory().getId())
-                .sizes(savedProduct.getProductSizes().stream().map((productSize) -> Size.builder().size(productSize.getSize().getSize()).id(productSize.getSize().getId()).build()
-                ).toList())
+                .sizes(savedProduct.getProductSizes().stream().map((productSize) -> Size.builder().size(productSize.getSize().getSize()).id(productSize.getSize().getId()).build()).toList())
                 .colour(savedProduct.getColour().getColour())
                 .imageList(savedProduct.getImages().stream().toList())
                 .brand(savedProduct.getBrand())
