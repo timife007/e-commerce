@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "order_item")
-//@EntityListeners(CartTotalListener.class)
 public class OrderItem {
 
     @Id
