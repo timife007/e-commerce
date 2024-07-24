@@ -187,7 +187,7 @@ public class CartServiceImpl implements CartService {
             //fix delivery fee.
             orderPublisherService.publishOrder(orderResponse);
             //cart should be deleted after confirming order
-            return "Order successfully placed";
+            return "Thank you for your Order";
         } catch (Exception e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }

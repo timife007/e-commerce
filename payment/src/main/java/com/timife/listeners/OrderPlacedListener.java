@@ -1,7 +1,7 @@
 package com.timife.listeners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.timife.model.OrderResponse;
+import com.timife.model.OrderDto;
 import com.timife.services.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class OrderPlacedListener {
         log.info("Received Token: {}", order);
         log.error(order);
         try {
-            OrderResponse item = objectMapper.readValue(order, OrderResponse.class);
+            OrderDto item = objectMapper.readValue(order, OrderDto.class);
             paymentService.makePayment(item);
         } catch (Exception exception) {
             log.error("Invalid validation: {}", exception.getLocalizedMessage());

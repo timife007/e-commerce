@@ -1,8 +1,8 @@
 package com.timife.services;
 
-import com.timife.model.OrderResponse;
+import com.timife.model.OrderDto;
 
 public interface PaymentService {
 
-    void makePayment(OrderResponse orderResponse);
+    void makePayment(OrderDto orderDto);
 }

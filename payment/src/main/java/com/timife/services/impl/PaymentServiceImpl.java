@@ -1,6 +1,6 @@
 package com.timife.services.impl;
 
-import com.timife.model.OrderResponse;
+import com.timife.model.OrderDto;
 import com.timife.model.OrderStatus;
 import com.timife.repositories.PaymentRepository;
 import com.timife.services.PaymentStatusPublishService;
@@ -22,16 +22,21 @@ public class PaymentServiceImpl implements PaymentService {
     private PaymentRepository paymentRepository;
 
     @Override
-    public void makePayment(OrderResponse orderResponse) {
+    public void makePayment(OrderDto orderDto) {
         try {
             //Make payment here
-            orderResponse.setOrderStatus(OrderStatus.ORDER_SUCCESSFUL);
+
+
+            //Also, send success email to that effect
+
+
+            orderDto.setOrderStatus(OrderStatus.ORDER_SUCCESSFUL);
             //publish payment status with the orderResponse as successful.
-            paymentStatusPublishService.publish(orderResponse);
-            return;
+            paymentStatusPublishService.publish(orderDto);
         } catch (Exception exception) {
-            orderResponse.setOrderStatus(OrderStatus.ORDER_FAILED);
-            paymentStatusPublishService.publish(orderResponse);
+            orderDto.setOrderStatus(OrderStatus.ORDER_FAILED);
+            paymentStatusPublishService.publish(orderDto);
+            //Also, send a failure email to that effect
             log.debug(exception.getLocalizedMessage());
         }
     }
