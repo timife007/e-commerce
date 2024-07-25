@@ -29,6 +29,7 @@ public class Order {
     private List<OrderedItem> orderedItemList;
     private Long userId;
     private Double deliveryFee = 0.0;
+    private Double subTotal = 0.0;
     private Double sumTotal = 0.0;
     private OrderStatus orderStatus;
 }

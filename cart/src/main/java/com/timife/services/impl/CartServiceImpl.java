@@ -171,6 +171,7 @@ public class CartServiceImpl implements CartService {
                                     .build()
                             ).toList())
                     .deliveryFee(cart.getDeliveryFee())
+                    .subTotal(cart.getSubTotal())
                     .sumTotal(cart.getSumTotal())
                     .build();
 
@@ -180,6 +181,7 @@ public class CartServiceImpl implements CartService {
                     .id(order.getId())
                     .userId(order.getUserId())
                     .orderStatus(order.getOrderStatus())
+                    .subTotal(order.getSubTotal())
                     .sumTotal(order.getSumTotal())
                     .deliveryFee(order.getDeliveryFee())
                     .build();
