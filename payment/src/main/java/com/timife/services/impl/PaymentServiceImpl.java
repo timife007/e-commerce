@@ -27,9 +27,6 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-//    @Autowired
-//    public SimpleMailMessage template;
-
 
 
     @Override
