@@ -5,6 +5,17 @@ payment:
     topic: payment.published
 
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: timife007@gmail.com
+    password: "dilnrznjdnosdica"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   docker:
     compose:
       file: ./payment/docker-compose.yml

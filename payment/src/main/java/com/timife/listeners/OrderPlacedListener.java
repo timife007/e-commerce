@@ -24,8 +24,7 @@ public class OrderPlacedListener {
 
     @KafkaListener(id = "order", topics = "order.published")
     public String listens(final String order) {
-        log.info("Received Token: {}", order);
-        log.error(order);
+        log.info("Received Order: {}", order);
         try {
             OrderDto item = objectMapper.readValue(order, OrderDto.class);
             paymentService.makePayment(item);
