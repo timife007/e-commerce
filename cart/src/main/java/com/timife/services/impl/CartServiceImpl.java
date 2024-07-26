@@ -186,7 +186,6 @@ public class CartServiceImpl implements CartService {
                     .deliveryFee(order.getDeliveryFee())
                     .build();
             //Send topic to kafka to signal order successfully placed.
-            //fix delivery fee.
             orderPublisherService.publishOrder(orderResponse);
             //cart should be deleted after confirming order
             return "Thank you for your Order";

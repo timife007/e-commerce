@@ -4,6 +4,7 @@ import com.timife.models.entities.DeliveryAddress;
 import com.timife.models.entities.User;
 import com.timife.models.requests.AddressRequest;
 import com.timife.models.responses.DeliveryAddressDto;
+import com.timife.models.responses.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,6 +15,8 @@ public interface UserService {
 
     public Page<User> getAllUsers(Pageable pageable);
     public User getUser(String email);
+
+    public UserResponse findUserById(Integer id);
 
 
     public boolean existsById(int id);

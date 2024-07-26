@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 public class OrderStatusListener {
     private final ObjectMapper objectMapper;
 
-
     private final ProductService productService;
 
     @KafkaListener(id = "placedOrder", topics = "placedOrder.published")
