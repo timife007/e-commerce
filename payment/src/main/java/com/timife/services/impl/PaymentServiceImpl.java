@@ -1,7 +1,9 @@
 package com.timife.services.impl;
 
+import com.timife.feign.UserDetailsFeign;
 import com.timife.model.OrderDto;
 import com.timife.model.OrderStatus;
+import com.timife.model.responses.UserResponse;
 import com.timife.repositories.PaymentRepository;
 import com.timife.services.PaymentStatusPublishService;
 import com.timife.services.PaymentService;
@@ -27,24 +29,40 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Autowired
+    private final UserDetailsFeign userDetailsFeign;
 
 
     @Override
     public void makePayment(OrderDto orderDto) {
+        UserResponse userResponse = userDetailsFeign.getUserAddresses(orderDto.getUserId().intValue()).getBody();
         try {
             //Make payment here
 
             //Success email to that effect
-            sendSimpleMessage("timothyademola226@gmail.com","#Order 123456 Successful","#Order 123456 successfully placed and Payment made");
+            if (userResponse != null) {
+                log.error(userResponse.toString());
+                sendSimpleMessage(userResponse.address(),
+                        "Your ASOS Order - "
+                                + "#" +
+                                orderDto.getId() +
+                                "-" +
+                                "successfully placed and Payment made",
+                        "#Order ***** successfully placed and Payment made");
+            }
             orderDto.setOrderStatus(OrderStatus.ORDER_SUCCESSFUL);
             //publish payment status with the orderResponse as successful.
             paymentStatusPublishService.publish(orderDto);
         } catch (Exception exception) {
             orderDto.setOrderStatus(OrderStatus.ORDER_FAILED);
 
-            //Failure Email
-            sendSimpleMessage("timothyademola226@gmail.com","#Order 123456 failed","#Order 123456 successfully placed and Payment made");
             paymentStatusPublishService.publish(orderDto);
+
+            //Failure Email
+            if (userResponse != null) {
+                sendSimpleMessage(userResponse.address(), "#Order" + orderDto.getId() + "failed", "#Order 123456 payment failed");
+            }
+
             log.debug(exception.getLocalizedMessage());
         }
     }

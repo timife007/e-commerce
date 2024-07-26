@@ -2,11 +2,13 @@ package com.timife.controllers;
 
 import com.timife.models.entities.DeliveryAddress;
 import com.timife.models.entities.RefreshToken;
+import com.timife.models.entities.User;
 import com.timife.models.requests.AddressRequest;
 import com.timife.models.requests.AuthRequestDto;
 import com.timife.models.requests.RefreshTokenRequestDto;
 import com.timife.models.requests.UserRequestDto;
 import com.timife.models.responses.DeliveryAddressDto;
+import com.timife.models.responses.UserResponse;
 import com.timife.repositories.RefreshTokenRepository;
 import com.timife.services.AuthenticationService;
 import com.timife.services.UserService;
@@ -119,6 +121,12 @@ public class AuthController {
     ResponseEntity<List<DeliveryAddressDto>> getUserAddresses(@PathVariable("userId") Integer userId){
             return ResponseEntity.ok(userService.getUserDeliveryAddresses(userId));
     }
+
+    @GetMapping("/{userId}")
+    ResponseEntity<UserResponse> getUserById(@PathVariable("userId") Integer userId){
+        return ResponseEntity.ok(userService.findUserById(userId));
+    }
+
 
     @PutMapping("/deliveryAddress/{id}")
     ResponseEntity<?> updateDeliveryAddress(@PathVariable("id") Long id,@RequestBody AddressRequest addressRequest){

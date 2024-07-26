@@ -4,6 +4,7 @@ import com.timife.models.entities.DeliveryAddress;
 import com.timife.models.entities.User;
 import com.timife.models.requests.AddressRequest;
 import com.timife.models.responses.DeliveryAddressDto;
+import com.timife.models.responses.UserResponse;
 import com.timife.repositories.DeliveryAddressRepository;
 import com.timife.repositories.UserRepository;
 import com.timife.services.UserService;
@@ -30,6 +31,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(String email) {
         return userRepository.findByEmail(email).orElseThrow();
+    }
+
+    @Override
+    public UserResponse findUserById(Integer id) {
+        User user = userRepository.findById(id).orElseThrow();
+        return UserResponse
+                .builder()
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .address(user.getDeliveryAddresses().getLast().getAddress())
+                .build();
     }
 
 
