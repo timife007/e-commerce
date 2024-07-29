@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import java.io.UnsupportedEncodingException;
 
@@ -42,12 +43,12 @@ public class PaymentServiceImpl implements PaymentService {
     public void makePayment(OrderDto orderDto) {
         UserResponse userResponse = userDetailsFeign.getUserAddresses(orderDto.getUserId().intValue()).getBody();
         try {
-            //Make payment here
+            //TODO:Make payment here
 
             //Success email to that effect
             if (userResponse != null) {
                 log.error(userResponse.toString());
-                sendSimpleMessage("***",
+                sendMessageWithAttachment(userResponse.email(),
                         "Your ASOS Order - "
                                 + "#" +
                                 orderDto.getId() +
@@ -65,18 +66,19 @@ public class PaymentServiceImpl implements PaymentService {
 
             //Failure Email
             if (userResponse != null) {
-                sendSimpleMessage("***", "#Order" + orderDto.getId() + "failed", "#Order 123456 payment failed");
+                sendMessageWithAttachment(userResponse.email(), "#Order" + orderDto.getId() + "failed", "#Order 123456 payment failed");
             }
 
             log.debug(exception.getLocalizedMessage());
         }
     }
 
+    @Async
     private void sendSimpleMessage(
             String to, String subject, String text){
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("***");
+            message.setFrom("sender-email");
             message.setTo(to);
             message.setSubject(subject);
             message.setText(text);
@@ -93,21 +95,17 @@ public class PaymentServiceImpl implements PaymentService {
         MimeMessageHelper helper = null;
         try {
             helper = new MimeMessageHelper(message, false);
-            helper.setFrom(new InternetAddress("***", "Timife Jobs"));
+            helper.setFrom(new InternetAddress("sender-email", "Timife Jobs"));
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(text);
             javaMailSender.send(message);
 
-            //        FileSystemResource file
+//            FileSystemResource file
 //                = new FileSystemResource(new File("pathToAttachment"));
 //        helper.addAttachment("Invoice", file);
         } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }
-
-
-
-
     }
 }

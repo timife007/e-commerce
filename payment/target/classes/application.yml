@@ -8,10 +8,11 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: "timothyademola226@gmail.com"
-    password: "kbej wqmg inuv bmyo"
+    username: timife007@gmail.com
+    password: rnex mhby gatf neve
     properties:
       mail:
+        debug: true
         smtp:
           auth: true
           starttls:
