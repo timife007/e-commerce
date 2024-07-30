@@ -1,6 +1,1 @@
-env/auth.env
-env/cart.env
-env/inventory.env
-env/payment.env
-env/pgadmin.env
-env/postgres.env
+env
