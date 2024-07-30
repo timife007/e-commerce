@@ -15,10 +15,6 @@ spring:
       file: ./cart/docker-compose.yml
   kafka:
     bootstrap-servers: localhost:9092
-  datasource:
-    url: jdbc:postgresql://localhost:5435/ecommerce-cart
-    password: secret
-    username: timife
   jpa:
     hibernate:
       ddl-auto: create-drop
