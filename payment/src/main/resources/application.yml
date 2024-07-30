@@ -8,8 +8,6 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: "app-username/email"
-    password: "smtp-app-password"
     properties:
       mail:
         debug: true
@@ -22,10 +20,6 @@ spring:
       file: ./payment/docker-compose.yml
   kafka:
     bootstrap-servers: localhost:9092
-  datasource:
-    url: jdbc:postgresql://localhost:5436/ecommerce-payment
-    password: secret
-    username: timife
   profiles:
     active: production
   jpa:
